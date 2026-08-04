@@ -1,0 +1,1864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESTALEIRO | Construção de artigos científicos</title>
+<style>
+:root{
+  --tinta:#15224A;
+  --mar:#1B4DD1;
+  --rumo:#FF6A13;
+  --rumo-verde:#E6187C;
+  --rosa:#E6187C;
+  --cinza:#5A6480;
+  --linha:#DDE3F2;
+  --suave:#F2F6FF;
+  --branco:#FFFFFF;
+  --critico:#C40F5B;
+  --atencao:#C4520A;
+  --ok:#1B4DD1;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  background:var(--branco);color:var(--tinta);line-height:1.55;font-size:15px;
+  -webkit-text-size-adjust:100%;
+}
+h1,h2,h3,h4,.serif{font-family:Georgia,"Times New Roman",serif}
+code,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+a{color:var(--mar)}
+
+header{border-bottom:3px solid transparent;border-image:linear-gradient(90deg,#1B4DD1 0%,#E6187C 55%,#FF6A13 100%) 1;background:var(--branco);position:sticky;top:0;z-index:50}
+.faixa{max-width:1180px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.marca{display:flex;align-items:center;gap:12px;flex:1;min-width:230px}
+.marca h1{font-size:23px;letter-spacing:4px;color:var(--mar);font-weight:700;line-height:1.1}
+.marca p{font-size:11px;color:var(--cinza);letter-spacing:.8px;text-transform:uppercase;margin-top:2px}
+.acoes{display:flex;gap:7px;flex-wrap:wrap}
+button{font-family:inherit;font-size:13px;padding:8px 12px;border-radius:3px;border:1px solid var(--linha);background:var(--branco);color:var(--tinta);cursor:pointer}
+button:hover{background:var(--suave);border-color:var(--mar)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--rosa);outline-offset:2px}
+button.primario{background:var(--mar);color:#fff;border-color:var(--mar)}
+button.primario:hover{background:#08414d}
+button.risco{color:var(--critico);border-color:#F8C6DC}
+button.mini{font-size:12px;padding:5px 9px}
+
+.barra-topo{height:5px;background:var(--suave)}
+.barra-topo i{display:block;height:100%;background:linear-gradient(90deg,#1B4DD1,#E6187C 60%,#FF6A13);width:0;transition:width .4s ease}
+
+main{max-width:1180px;margin:0 auto;padding:0 18px 90px}
+
+/* carta de rota */
+.carta{border:1px solid var(--linha);border-top:none;background:var(--branco);padding:4px 0 0}
+.carta svg{display:block;width:100%;height:auto}
+.legenda-carta{display:flex;gap:16px;flex-wrap:wrap;padding:6px 16px 12px;font-size:11.5px;color:var(--cinza);border-top:1px solid var(--linha)}
+.legenda-carta span{display:flex;align-items:center;gap:6px}
+.pt{width:11px;height:11px;border-radius:50%;border:1.8px solid var(--mar);display:inline-block}
+.pt.cheio{background:var(--rumo);border-color:var(--rumo)}
+.pt.meio{background:linear-gradient(90deg,var(--rumo) 50%,#fff 50%)}
+
+/* navegacao */
+.rumos{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--linha);margin-top:22px;scrollbar-width:thin}
+.rumos button{border:none;border-bottom:3px solid transparent;border-radius:0;white-space:nowrap;padding:10px 13px;font-size:13px;color:var(--cinza)}
+.rumos button.ativo{border-bottom-color:var(--rosa);color:var(--rosa);font-weight:700}
+.rumos button b{font-family:Georgia,serif;color:var(--mar);margin-right:6px}
+
+.estacao{padding:8px 0 10px}
+.estacao > h2{font-size:26px;color:var(--tinta);letter-spacing:-.2px}
+.eyebrow{font-size:11px;letter-spacing:2.4px;text-transform:uppercase;color:var(--rosa);font-weight:700;margin-bottom:6px}
+.chamada{color:var(--cinza);font-size:14.5px;margin:8px 0 20px;max-width:760px}
+
+.painel{border:1px solid var(--linha);border-left:4px solid var(--mar);padding:16px 18px;margin:16px 0;background:var(--branco)}
+.painel h3{font-size:17px;margin-bottom:4px}
+.painel .sub{font-size:13px;color:var(--cinza);margin-bottom:12px}
+
+label.campo{display:block;margin:12px 0}
+label.campo span{display:block;font-size:12.5px;color:var(--cinza);margin-bottom:4px;font-weight:600}
+input[type=text],input[type=number],input[type=email],select,textarea{
+  width:100%;font-family:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--linha);border-radius:3px;background:var(--branco);color:var(--tinta)
+}
+textarea{resize:vertical;min-height:90px;line-height:1.5}
+.grade{display:grid;gap:12px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+@media(max-width:720px){.g2,.g3{grid-template-columns:1fr}}
+
+/* itens de verificacao */
+.item{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--linha);align-items:flex-start}
+.item:last-child{border-bottom:none}
+.item input[type=checkbox]{margin-top:4px;width:17px;height:17px;flex:none;accent-color:var(--mar)}
+.item .txt{flex:1}
+.item .txt b{font-weight:600;font-size:14.5px}
+.item .txt small{display:block;color:var(--cinza);font-size:12.5px;margin-top:2px}
+.tag{font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:2px;font-weight:700;white-space:nowrap}
+.tag.critico{background:#FFE9F1;color:var(--critico)}
+.tag.padrao{background:var(--suave);color:var(--mar)}
+.item.feito .txt b{color:var(--cinza);text-decoration:line-through;text-decoration-thickness:1px}
+
+/* diagnosticos */
+.diag{margin-top:12px;display:flex;flex-direction:column;gap:7px}
+.aviso{display:flex;gap:9px;padding:9px 11px;border-radius:3px;font-size:13.5px;align-items:flex-start;border:1px solid}
+.aviso.erro{background:#FFE9F1;border-color:#F8C6DC;color:var(--critico)}
+.aviso.alerta{background:#FFF1E5;border-color:#FFD4B0;color:var(--atencao)}
+.aviso.bom{background:#E9EFFF;border-color:#C4D5FF;color:var(--ok)}
+.aviso.neutro{background:var(--suave);border-color:var(--linha);color:var(--tinta)}
+.aviso b{font-weight:700}
+
+.contador{font-size:12.5px;color:var(--cinza);text-align:right;margin-top:4px}
+.contador.excedeu{color:var(--critico);font-weight:700}
+
+/* cartoes de lista */
+.cartao{border:1px solid var(--linha);padding:14px;margin:12px 0;position:relative;background:var(--branco)}
+.cartao .ordem{position:absolute;top:-9px;left:12px;background:var(--branco);padding:0 7px;font-family:Georgia,serif;font-size:12px;color:var(--rosa);letter-spacing:1px;font-weight:700}
+.cartao .fechar{position:absolute;top:9px;right:9px}
+.papeis{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.papeis label{font-size:12px;border:1px solid var(--linha);padding:4px 8px;border-radius:2px;cursor:pointer;display:flex;gap:5px;align-items:center;background:var(--branco)}
+.papeis label.on{background:var(--mar);color:#fff;border-color:var(--mar)}
+.papeis label input{display:none}
+.icmje{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+.icmje label{font-size:12.8px;display:flex;gap:8px;align-items:flex-start;color:var(--tinta)}
+.icmje input{margin-top:3px;flex:none;accent-color:var(--mar)}
+
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+th,td{border:1px solid var(--linha);padding:7px 9px;text-align:left;vertical-align:top}
+th{background:var(--suave);color:var(--mar);font-weight:600;font-size:12px;letter-spacing:.4px}
+.rolagem{overflow-x:auto}
+
+.chaves{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}
+.chave{border:1px solid var(--linha);padding:5px 9px;font-size:13px;border-radius:2px;display:flex;gap:7px;align-items:center;cursor:pointer;background:var(--branco)}
+.chave.red{border-color:#F8C6DC;background:#FFE9F1;color:var(--critico)}
+.chave.sel{background:var(--mar);color:#fff;border-color:var(--mar)}
+.chave small{opacity:.7;font-size:11px}
+
+.saida{white-space:pre-wrap;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;border:1px solid var(--linha);padding:14px;background:var(--suave);max-height:420px;overflow:auto;line-height:1.5}
+
+.rodape{border-top:1px solid var(--linha);margin-top:40px;padding:20px 0 0;font-size:12.5px;color:var(--cinza)}
+.rodape b{color:var(--tinta)}
+.nota{font-size:12.5px;color:var(--cinza);border-left:2px solid var(--linha);padding-left:11px;margin-top:10px}
+.oculto{display:none}
+
+.mar{border:1px solid var(--linha);border-top:none;background:var(--branco);padding:0}
+.mar svg{display:block;width:100%;height:auto}
+@keyframes balanca{0%,100%{transform:translateY(0) rotate(-1.4deg)}50%{transform:translateY(-4px) rotate(1.4deg)}}
+@keyframes onda{from{transform:translateX(0)}to{transform:translateX(-120px)}}
+@keyframes fumaca{0%{opacity:.5;transform:translateY(0) scale(.7)}100%{opacity:0;transform:translateY(-16px) scale(1.4)}}
+#casco{animation:balanca 3.6s ease-in-out infinite;transform-origin:22px 20px}
+#navio{transition:transform .9s cubic-bezier(.4,0,.2,1)}
+.onda{animation:onda 9s linear infinite}
+.tela{position:fixed;inset:0;background:rgba(21,34,74,.5);display:flex;align-items:center;justify-content:center;z-index:100;padding:14px}
+.caixa{background:#fff;max-width:780px;width:100%;max-height:88vh;overflow:auto;border-top:5px solid var(--rosa);padding:20px}
+.caixa h3{font-size:20px;margin-bottom:4px}
+.caixa .sub{font-size:13px;color:var(--cinza);margin-bottom:14px}
+.sobre{border:1px solid var(--linha);border-top:none;padding:22px 20px 18px;background:var(--suave)}
+.sobre h2{font-size:21px;margin-bottom:8px}
+.sobre p{max-width:820px;margin-bottom:10px;font-size:14.5px}
+.sobre .colunas{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+@media(max-width:820px){.sobre .colunas{grid-template-columns:1fr}}
+.sobre .col{background:#fff;border:1px solid var(--linha);border-top:3px solid var(--mar);padding:13px 14px}
+.sobre .col:nth-child(2){border-top-color:var(--rosa)}
+.sobre .col:nth-child(3){border-top-color:var(--rumo)}
+.sobre .col h4{font-size:14px;margin-bottom:5px}
+.sobre .col p{font-size:13px;color:var(--cinza);margin:0}
+.sobre ul{margin:8px 0 0 18px;font-size:13.5px;color:var(--cinza)}
+.sobre li{margin-bottom:4px}
+
+.rumos button.aba-sobre{color:var(--mar);font-weight:600}
+.rumos button.aba-sobre.ativo{border-bottom-color:var(--mar);color:var(--mar)}
+.sinal{width:7px;height:7px;border-radius:50%;background:var(--linha);display:inline-block;margin-right:7px;vertical-align:middle}
+.sinal.andando{background:var(--rosa)}
+.sinal.pronto{background:var(--rumo)}
+.mar{overflow-x:auto;scrollbar-width:thin}
+@media(max-width:760px){
+  .mar svg{min-width:790px}
+  .marca h1{font-size:20px;letter-spacing:3px}
+  .estacao > h2{font-size:22px}
+  .capa .num{font-size:44px}
+}
+.capa{display:flex;gap:16px;align-items:flex-start;padding:22px 0 4px;border-bottom:1px solid var(--linha);margin-bottom:6px}
+.capa .num{font-family:Georgia,serif;font-size:56px;line-height:.9;color:var(--linha);font-weight:700;flex:none}
+.capa .txt{flex:1;min-width:0}
+.medidor{height:5px;background:var(--suave);border-radius:3px;margin-top:12px;overflow:hidden;max-width:280px}
+.medidor i{display:block;height:100%;background:linear-gradient(90deg,var(--mar),var(--rosa),var(--rumo));width:0}
+.sobre{padding:6px 0 0}
+.sobre h2{font-size:27px;margin-bottom:10px;letter-spacing:-.3px}
+.sobre .lide{font-size:16.5px;color:var(--tinta);max-width:800px;margin-bottom:14px;line-height:1.6}
+.sobre p{max-width:820px;margin-bottom:10px;font-size:14.5px;color:var(--cinza)}
+.sobre .colunas{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0}
+@media(max-width:820px){.sobre .colunas{grid-template-columns:1fr}}
+.sobre .col{background:var(--branco);border:1px solid var(--linha);border-top:4px solid var(--mar);padding:14px 15px}
+.sobre .col:nth-child(2){border-top-color:var(--rosa)}
+.sobre .col:nth-child(3){border-top-color:var(--rumo)}
+.sobre .col h4{font-size:14.5px;margin-bottom:6px}
+.sobre .col p{font-size:13.2px;margin:0}
+.mapa{display:grid;grid-template-columns:repeat(auto-fill,minmax(226px,1fr));gap:10px;margin-top:14px}
+.mapa a{display:block;border:1px solid var(--linha);border-left:4px solid var(--mar);padding:10px 12px;text-decoration:none;color:var(--tinta);background:var(--branco);cursor:pointer}
+.mapa a:hover{background:var(--suave);border-left-color:var(--rosa)}
+.mapa a b{display:block;font-size:14px;font-family:Georgia,serif}
+.mapa a small{display:block;color:var(--cinza);font-size:12.3px;margin-top:2px;line-height:1.4}
+.mapa a i{font-style:normal;font-family:Georgia,serif;color:var(--rosa);font-size:11.5px;letter-spacing:1px}
+.assinatura{border:1px solid var(--linha);border-top:4px solid var(--rumo);padding:15px 16px;margin-top:22px;background:var(--branco)}
+.assinatura b{font-size:14.5px}
+.assinatura p{font-size:13.2px;color:var(--cinza);margin-top:4px}
+.abas-sec{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0 4px}
+.abas-sec button{border:1px solid var(--linha);background:#fff;padding:8px 12px;font-size:13px;border-radius:3px}
+.abas-sec button.on{background:var(--mar);color:#fff;border-color:var(--mar)}
+.abas-sec button small{opacity:.75;font-size:11px;margin-left:4px}
+.painel svg{border:1px solid var(--linha);margin-top:8px;background:#fff}
+@media print{header,.rumos,.acoes,.carta{display:none}main{padding:0}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="faixa">
+    <div class="marca">
+      <svg class="selo" width="52" height="52" viewBox="0 0 52 52" aria-hidden="true"><path d="M27 8 L27 34" stroke="#15224A" stroke-width="2.2" stroke-linecap="round"/><path d="M29 11 L43 32 L29 32 Z" fill="#FF6A13"/><path d="M25 15 L12 32 L25 32 Z" fill="#E6187C"/><path d="M27 6 L38 10 L27 14 Z" fill="#1B4DD1"/><path d="M8 34 L46 34 L39 44 L15 44 Z" fill="#1B4DD1"/><path d="M4 47 q 6 -4 12 0 t 12 0 t 12 0 t 12 0" fill="none" stroke="#C4D5FF" stroke-width="2" stroke-linecap="round"/></svg>
+      <div>
+        <h1 id="marcaNome">ESTALEIRO</h1>
+        <p id="marcaLema">O artigo, peça por peça</p>
+      </div>
+    </div>
+    <div class="acoes">
+      <button onclick="P.sobre()">Sobre</button>
+      <button onclick="P.biblioteca()">Biblioteca</button>
+      <button onclick="P.exportarJSON()">Salvar</button>
+      <button onclick="P.abrir()">Abrir</button>
+      <button onclick="P.dossie()">Dossiê</button>
+      <button class="risco" onclick="P.limpar()">Recomeçar</button>
+      <input type="file" id="arq" accept="application/json" class="oculto" onchange="P.importarJSON(event)">
+    </div>
+  </div>
+  <div class="barra-topo"><i id="barra"></i></div>
+</header>
+
+<main>
+  <div class="mar" id="carta"></div>
+  <div class="rumos" id="rumos"></div>
+  <div class="estacao" id="estacao"></div>
+
+  <div class="rodape">
+    <p><b>ESTALEIRO</b>. Instrumento público para construção e avaliação de artigos científicos, da escolha da revista ao plano de difusão. Uso livre por qualquer programa de pós-graduação.</p>
+    <p style="margin-top:6px">Concepção e conteúdo: <b>Ernandes Sobreira Oliveira Junior</b> e <b>Carla Galbiati</b>. Universidade do Estado de Mato Grosso, Campus de Cáceres, Mato Grosso, Brasil.</p>
+    <p style="margin-top:6px">Os dados ficam apenas neste navegador. Nada é enviado para servidor algum. Use "Salvar arquivo" para guardar e transferir a obra.</p>
+    <p id="avisoArmazenamento" style="margin-top:6px;color:#8A5300"></p>
+  </div>
+</main>
+
+<script>
+/* =========================================================
+   PORTULANO
+   Arquivo único. Sem dependências externas.
+   ========================================================= */
+
+/* ---------- armazenamento com queda para memória ---------- */
+var MEM={}, TEM_LS=false;
+try{ localStorage.setItem('__pt','1'); localStorage.removeItem('__pt'); TEM_LS=true; }catch(e){ TEM_LS=false; }
+var loja={
+  ler:function(k){ try{ return TEM_LS? localStorage.getItem(k) : (MEM[k]||null); }catch(e){ return MEM[k]||null; } },
+  gravar:function(k,v){ try{ if(TEM_LS) localStorage.setItem(k,v); else MEM[k]=v; }catch(e){ MEM[k]=v; } },
+  apagar:function(k){ try{ if(TEM_LS) localStorage.removeItem(k); else delete MEM[k]; }catch(e){ delete MEM[k]; } }
+};
+
+/* ---------- estado ---------- */
+var VAZIO={
+  area:'', tipo:'', diretriz:'',
+  trabalho:{titulo:'', tituloCurto:'', resumo:'', limiteResumo:250, limiteTitulo:15, idioma:'pt'},
+  chaves:[], chavesDescartadas:[],
+  revistas:[], revistaEscolhida:'',
+  preprint:'', rotaOA:'',
+  autores:[],
+  meta:{instituicao:'', financiamento:'', processo:'', etica:'', licenca:'', conflito:'', dispDados:'', usoIA:''},
+  figuras:[],
+  dados:{repositorio:'', doi:'', licencaDados:'', codigo:''},
+  revisores:[],
+  itens:{}, notas:{}, difusao:{}, iaUrl:'', sugeridas:[], sobreFechado:false
+};
+var E=JSON.parse(JSON.stringify(VAZIO));
+var atual=0;
+
+function salvar(){ loja.gravar('estaleiro.v1', JSON.stringify(E)); }
+function carregar(){
+  var b=loja.ler('estaleiro.v1');
+  if(b){ try{ var o=JSON.parse(b); for(var k in VAZIO){ if(o[k]!==undefined) E[k]=o[k]; } }catch(e){} }
+}
+
+/* ---------- perfis de grande área ---------- */
+var AREAS={
+  ambientais:{
+    nome:'Ciências ambientais, agrárias e biológicas',
+    diretrizes:['ARRIVE (experimentos com animais)','PRISMA (revisão sistemática)','MIAME e MIxS (dados moleculares)','Nenhuma diretriz formal se aplica'],
+    etica:'Licença de coleta (SISBIO, ICMBio), CEUA, acesso ao patrimônio genético (SisGen), autorização de área privada.',
+    repositorios:'Zenodo, Dryad, PANGAEA, GBIF, SciELO Data, repositório institucional.',
+    vocabulario:'AGROVOC (FAO) e GEMET (Agência Europeia do Ambiente).',
+    extras:['Coordenadas e datum informados para todos os sítios de coleta','Nomes científicos completos com autoridade na primeira menção','Métodos analíticos com limite de detecção e material de referência declarados']
+  },
+  exatas:{
+    nome:'Exatas, engenharias e computação',
+    diretrizes:['Nenhuma diretriz formal se aplica','PRISMA (revisão sistemática)','Diretriz específica da sociedade científica da área'],
+    etica:'Declaração de segurança, uso de dados de terceiros, licenças de software e de conjuntos de dados.',
+    repositorios:'Zenodo, figshare, GitHub com DOI via Zenodo, OSF.',
+    vocabulario:'Termos controlados da ACM, IEEE Thesaurus ou INSPEC.',
+    extras:['Código depositado com versão, licença e instruções de execução','Incerteza e propagação de erro declaradas em todas as medidas','Hardware, versões de bibliotecas e sementes aleatórias registradas']
+  },
+  saude:{
+    nome:'Ciências da saúde',
+    diretrizes:['CONSORT (ensaio clínico)','STROBE (observacional)','PRISMA (revisão sistemática)','COREQ (qualitativa)','STARD (acurácia diagnóstica)'],
+    etica:'Aprovação do CEP e da CONEP, registro em plataforma de ensaios clínicos, termo de consentimento livre e esclarecido.',
+    repositorios:'SciELO Data, Dryad, repositório institucional com dados desidentificados.',
+    vocabulario:'MeSH (PubMed) e DeCS (BVS, trilíngue).',
+    extras:['Número de aprovação do CEP citado no texto','Cálculo do tamanho amostral apresentado','Registro do ensaio anterior ao recrutamento, com número']
+  },
+  humanas:{
+    nome:'Humanas, sociais aplicadas e linguística',
+    diretrizes:['COREQ ou SRQR (qualitativa)','PRISMA (revisão sistemática)','Nenhuma diretriz formal se aplica'],
+    etica:'Aprovação do CEP para pesquisa com seres humanos, anonimização de participantes, consentimento para uso de falas e imagens.',
+    repositorios:'SciELO Data, OSF, Harvard Dataverse, repositório institucional.',
+    vocabulario:'Tesauro Brasileiro de Ciências Sociais, Unesco Thesaurus, tesauro da área.',
+    extras:['Posicionalidade do pesquisador explicitada quando o método exige','Critérios de saturação ou de suficiência amostral declarados','Corpus documental descrito com fonte, recorte e critério de seleção']
+  }
+};
+
+/* ---------- estações ---------- */
+var ESTACOES=[
+  {curto:'Base',    nome:'Base do projeto e perfil', frase:'Antes de escrever, defina o que é este trabalho e a que comunidade ele responde. O perfil de área ajusta as verificações das estações seguintes.', mod:'rota', itens:[
+    {id:'r1',t:'O trabalho tem uma única mensagem central, que cabe em uma frase',w:'critico',a:'Se você precisa de duas frases, provavelmente são dois artigos.'},
+    {id:'r2',t:'A lacuna já foi delimitada e testada contra a literatura recente',w:'critico',a:'A lacuna vem antes do texto. Se o ASTROLÁBIO já foi usado, traga a lacuna de lá.'},
+    {id:'r3',t:'Os dados estão completos e as análises fechadas',w:'critico',a:'Escrever com análise em aberto produz retrabalho e conclusões que não sobrevivem à revisão.'},
+    {id:'r4',t:'O tipo de estudo determina a diretriz de relato a ser seguida',w:'padrao',a:'Muitas revistas exigem a lista de checagem da diretriz no ato da submissão.'},
+    {id:'r5',t:'Há concordância prévia entre os autores sobre o escopo do artigo',w:'padrao',a:'Discordância de escopo depois do rascunho pronto custa semanas.'}
+  ]},
+  {curto:'Revista', nome:'Revista alvo e decisões de visibilidade', frase:'A revista é escolhida antes da escrita, não depois. É aqui que a visibilidade se decide: rota de acesso aberto, política de preprint e público leitor. Divulgação posterior corrige pouco.', mod:'revista', itens:[
+    {id:'j1',t:'Três artigos recentes da revista foram lidos e o formato foi conferido',w:'critico',a:'Aderência de escopo se verifica lendo o que a revista publicou nos últimos doze meses.'},
+    {id:'j2',t:'O tempo médio até a primeira decisão é compatível com o prazo do trabalho',w:'padrao',a:'Prazo de bolsa, de defesa e de relatório de projeto entram nessa conta.'},
+    {id:'j3',t:'O custo de publicação está resolvido, incluindo isenção ou desconto',w:'critico',a:'Descobrir a taxa após o aceite é a causa mais comum de artigo aceito e não publicado.'},
+    {id:'j4',t:'A política de preprint da revista foi verificada antes de qualquer depósito',w:'critico',a:'Poucas revistas ainda recusam manuscritos previamente depositados. Verifique antes, não depois.'},
+    {id:'j5',t:'A revista está indexada nas bases que importam para a avaliação do programa',w:'padrao',a:'Qualis, Scopus, Web of Science e SciELO conforme a área.'},
+    {id:'j6',t:'Há uma segunda e uma terceira opção definidas, com o motivo de cada uma',w:'padrao',a:'Definir a fila agora evita a decisão apressada logo após uma recusa.'}
+  ]},
+  {curto:'Corpo', nome:'Estrutura do artigo, seção por seção', frase:'O artigo tem forma de ampulheta: abre amplo, estreita no método e no resultado, e volta a abrir na discussão. Cada seção responde a uma pergunta diferente, e trocar essas perguntas de lugar é o defeito mais comum em manuscrito de primeira submissão.', mod:'corpo', itens:[
+    {id:'i1',sec:'intro',t:'O primeiro bloco situa o problema em escala ampla, sem revisão histórica desnecessária',w:'padrao',a:'Duas ou três frases bastam para dizer por que o tema existe.'},
+    {id:'i2',sec:'intro',t:'O segundo bloco mostra o que já se sabe, com literatura representativa e atual',w:'critico',a:'Citar sobretudo o próprio grupo é sinalizado por editores e por revisores.'},
+    {id:'i3',sec:'intro',t:'A lacuna está escrita em uma frase explícita, dizendo o que falta e por que isso importa',w:'critico',a:'Se o leitor precisa deduzir a lacuna, ela não está escrita.'},
+    {id:'i4',sec:'intro',t:'O objetivo ou a hipótese fecha a introdução e responde exatamente à lacuna',w:'critico',a:'Lacuna e objetivo desalinhados derrubam a lógica do artigo inteiro.'},
+    {id:'i5',sec:'intro',t:'A introdução não antecipa resultados nem discute achados',w:'padrao',a:'Resultado antecipado na introdução tira força da discussão.'},
+    {id:'i6',sec:'intro',t:'A extensão fica entre 15 e 20 por cento do texto',w:'padrao',a:'Introdução longa costuma esconder ausência de lacuna definida.'},
+    {id:'m1',sec:'metodo',t:'Outro pesquisador consegue repetir o estudo lendo apenas esta seção',w:'critico',a:'Este é o único teste que importa nos métodos.'},
+    {id:'m2',sec:'metodo',t:'Área de estudo com coordenadas, datum, período e justificativa dos sítios',w:'critico',a:'Por que estes locais e não outros.'},
+    {id:'m3',sec:'metodo',t:'Desenho amostral explícito, com unidade amostral e número de réplicas',w:'critico',a:'Confundir réplica verdadeira com pseudorréplica invalida a análise.'},
+    {id:'m4',sec:'metodo',t:'Equipamentos e métodos analíticos com modelo, fabricante e limite de detecção',w:'padrao',a:'Inclui material de referência e controle de qualidade quando houver.'},
+    {id:'m5',sec:'metodo',t:'Análise estatística com teste, pressupostos verificados, nível de significância e programa com versão',w:'critico',a:'Pressuposto não verificado é a crítica metodológica mais frequente.'},
+    {id:'m6',sec:'metodo',t:'A ordem das subseções acompanha a ordem em que os resultados aparecem',w:'padrao',a:'Facilita a leitura e reduz idas e vindas do revisor.'},
+    {id:'m7',sec:'metodo',t:'Aprovações éticas e licenças citadas com número no corpo da seção',w:'critico',a:'Não basta estar na carta ao editor.'},
+    {id:'s1',sec:'result',t:'Apresenta o achado sem interpretá-lo',w:'critico',a:'Interpretação pertence à discussão. Misturar as duas é o erro mais comum.'},
+    {id:'s2',sec:'result',t:'Cada resultado traz magnitude, variação e tamanho amostral, não apenas o valor de p',w:'critico',a:'Valor de p sozinho não informa relevância.'},
+    {id:'s3',sec:'result',t:'O texto destaca o padrão em vez de repetir a tabela ou a figura',w:'padrao',a:'Se o texto repete a tabela, uma das duas está sobrando.'},
+    {id:'s4',sec:'result',t:'A ordem dos resultados segue a ordem dos objetivos',w:'padrao',a:'Objetivo 1 primeiro, objetivo 2 depois.'},
+    {id:'s5',sec:'result',t:'Resultados contrários à hipótese estão relatados com o mesmo cuidado',w:'critico',a:'Omitir o que não deu certo é má conduta, não estratégia de escrita.'},
+    {id:'d1',sec:'discus',t:'O primeiro parágrafo responde ao objetivo, com o achado principal em uma frase',w:'critico',a:'Nada de recomeçar com revisão de literatura.'},
+    {id:'d2',sec:'discus',t:'Compara com a literatura mostrando concordância e discordância, e explica a discordância',w:'critico',a:'Discordância inexplicada enfraquece o artigo mais do que a própria discordância.'},
+    {id:'d3',sec:'discus',t:'Propõe mecanismo ou explicação, separando o que é evidência do que é inferência',w:'padrao',a:'Verbos de inferência: sugere, indica, é compatível com.'},
+    {id:'d4',sec:'discus',t:'Não introduz resultado novo que não apareceu na seção anterior',w:'critico',a:'Resultado novo na discussão é devolvido pelo editor.'},
+    {id:'d5',sec:'discus',t:'Aponta a implicação prática, de manejo ou de política pública, quando cabe',w:'padrao',a:'É o parágrafo que faz o artigo circular fora da própria área.'},
+    {id:'l1',sec:'limit',t:'As limitações estão escritas pelos autores, não deixadas para o revisor encontrar',w:'critico',a:'Reconhecer antes retira do revisor o argumento de recusa.'},
+    {id:'l2',sec:'limit',t:'Cada limitação diz qual inferência ela restringe',w:'critico',a:'Lista genérica de limitações não vale nada.'},
+    {id:'l3',sec:'limit',t:'Informa o que foi feito para reduzir cada limitação',w:'padrao',a:'Mostra domínio do método, não fragilidade.'},
+    {id:'l4',sec:'limit',t:'Não vira desculpa nem autodepreciação',w:'padrao',a:'Limitação é delimitação de alcance, não confissão de fracasso.'},
+    {id:'c1',sec:'concl',t:'Responde à pergunta da introdução sem repetir o resumo',w:'critico',a:'Conclusão que repete o resumo é espaço desperdiçado.'},
+    {id:'c2',sec:'concl',t:'Não extrapola além do que os dados sustentam',w:'critico',a:'Extrapolação é o motivo mais comum de pedido de revisão maior.'},
+    {id:'c3',sec:'concl',t:'Indica o alcance do achado e a próxima pergunta',w:'padrao',a:'A próxima pergunta é o convite para o leitor citar o trabalho.'}
+  ]},
+  {curto:'Título',  nome:'Título', frase:'O título é o instrumento de recuperação mais usado do artigo. Ele precisa conter os termos pelos quais alguém procuraria este trabalho sem saber que ele existe.', mod:'titulo', itens:[
+    {id:'t1',t:'O título afirma um resultado, não apenas anuncia um tema',w:'padrao',a:'Títulos informativos, que dizem o achado, são mais citados que títulos indicativos.'},
+    {id:'t2',t:'Contém os termos de busca que um leitor usaria para chegar até aqui',w:'critico',a:'Escreva a busca que você faria. Os termos dela precisam estar no título.'},
+    {id:'t3',t:'Não usa siglas não consagradas nem jargão restrito a um grupo',w:'padrao',a:'Sigla no título derruba a recuperação por quem está fora do grupo.'},
+    {id:'t4',t:'O recorte espacial e temporal aparece quando é essencial ao achado',w:'padrao',a:'Sem exagero. Local no título limita o alcance quando o achado é geral.'}
+  ]},
+  {curto:'Resumo',  nome:'Resumo', frase:'O resumo é lido cem vezes mais que o artigo. Ele precisa conter contexto, lacuna, objetivo, método, resultado com número e conclusão, nessa ordem e sem citações.', mod:'resumo', itens:[
+    {id:'a1',t:'Traz pelo menos um resultado quantitativo, com magnitude e incerteza',w:'critico',a:'Resumo sem número é resumo de projeto, não de artigo.'},
+    {id:'a2',t:'A conclusão responde exatamente ao objetivo declarado',w:'critico',a:'Objetivo e conclusão desalinhados é o defeito mais apontado por revisores.'},
+    {id:'a3',t:'Não contém citações, notas de rodapé nem siglas sem definição',w:'padrao',a:'O resumo circula sozinho, fora do artigo.'},
+    {id:'a4',t:'Respeita o limite de palavras da revista',w:'critico',a:'Sistema de submissão corta o excedente sem avisar.'}
+  ]},
+  {curto:'Chaves', nome:'Palavras-chave', frase:'As bases indexam título e resumo. Toda palavra-chave que repete o título desperdiça um espaço. O papel delas é acrescentar caminhos de busca que o título não oferece.', mod:'chaves', itens:[
+    {id:'k1',t:'Pelo menos três palavras-chave não aparecem no título',w:'critico',a:'São elas que ampliam a recuperação do artigo.'},
+    {id:'k2',t:'Ao menos duas vêm de vocabulário controlado da área',w:'padrao',a:'AGROVOC, GEMET, MeSH, DeCS ou o tesauro da área.'},
+    {id:'k3',t:'Há um termo mais amplo, que conecta o trabalho a uma agenda maior',w:'padrao',a:'Termo amplo demais dilui, termo estreito demais isola. Precisa de um de cada.'},
+    {id:'k4',t:'A quantidade obedece ao intervalo exigido pela revista',w:'padrao',a:'Em geral entre quatro e seis.'}
+  ]},
+  {curto:'Autoria', nome:'Autoria, portão ICMJE e CRediT', frase:'Autoria não é percentual. O critério ICMJE é uma porta de quatro fechaduras: quem não abre todas entra nos agradecimentos. O CRediT descreve papéis, não pesos.', mod:'autoria', itens:[
+    {id:'u1',t:'Todos os autores cumprem os quatro critérios ICMJE',w:'critico',a:'Cumprir três não basta. O quarto, a responsabilidade pelo conjunto do trabalho, é o mais esquecido.'},
+    {id:'u2',t:'A ordem de autoria foi acordada por escrito e datada',w:'critico',a:'Acordo verbal sobre ordem é a origem mais frequente de conflito ao fim do processo.'},
+    {id:'u3',t:'Quem contribuiu sem cumprir os critérios está nos agradecimentos, com anuência',w:'padrao',a:'Agradecimento nominal exige consentimento da pessoa citada.'},
+    {id:'u4',t:'Há exatamente um autor correspondente, com e-mail institucional estável',w:'critico',a:'E-mail de aluno expira. O correspondente responde pelo artigo por anos.'},
+    {id:'u5',t:'Todos os coautores leram e aprovaram a versão que será submetida',w:'critico',a:'Aprovação final é o terceiro critério ICMJE, e precisa ser da versão exata submetida.'}
+  ]},
+  {curto:'IDs', nome:'Identificadores e metadados', frase:'É a parte mais burocrática e a que mais atrasa submissão. Resolvida uma vez, serve para todos os artigos seguintes do grupo.', mod:'meta', itens:[
+    {id:'m1',t:'Todos os autores têm ORCID ativo e vinculado à instituição',w:'critico',a:'Muitas revistas exigem ORCID do correspondente e recusam a submissão sem ele.'},
+    {id:'m2',t:'Afiliação escrita no formato oficial da instituição, igual para todos',w:'critico',a:'Afiliação divergente fragmenta a contagem institucional em Scopus e Web of Science.'},
+    {id:'m3',t:'Agência financiadora e número de processo conferidos no termo de outorga',w:'critico',a:'Número de processo errado compromete a prestação de contas do projeto.'},
+    {id:'m4',t:'Aprovação ética ou licença de coleta com número citado no texto',w:'critico',a:'Falta desse número gera devolução automática na triagem editorial.'},
+    {id:'m5',t:'Declaração de conflito de interesses preenchida por todos os autores',w:'padrao',a:'Inclui vínculos com empresas, consultorias e financiamento privado.'},
+    {id:'m6',t:'Uso de ferramentas de inteligência artificial declarado conforme a política da revista',w:'padrao',a:'Sistemas de IA não podem figurar como autores. O uso deve ser descrito.'},
+    {id:'m7',t:'Currículo Lattes atualizado dos autores brasileiros',w:'padrao',a:'A produção só entra na avaliação do programa se estiver no Lattes.'},
+    {id:'m8',t:'Se houve uso de inteligência artificial, a ferramenta, a versão e a finalidade estão descritas',w:'padrao',a:'Revisão de idioma, apoio à programação e organização de texto são usos declaráveis.'},
+    {id:'m9',t:'Nenhum trecho gerado por IA entrou no texto sem verificação de fato e de fonte',w:'critico',a:'O autor responde pelo conteúdo, inclusive pelo que a ferramenta escreveu.'},
+    {id:'m10',t:'Nenhuma referência foi inserida sem conferência no artigo original',w:'critico',a:'Referências inventadas por sistemas de linguagem são causa registrada de retratação.'},
+    {id:'m11',t:'A IA não figura como autora e não foi usada para gerar dados ou resultados',w:'critico',a:'Nenhum periódico aceita sistema de IA como autor, porque ele não pode assumir responsabilidade.'}
+  ]},
+  {curto:'Figuras', nome:'Figuras e tabelas', frase:'Revisor cansado lê figura. Cada figura precisa se explicar sozinha, fora do texto, e ser citada em ordem crescente.', mod:'figuras', itens:[
+    {id:'f1',t:'Cada figura e tabela é citada no texto, em ordem crescente',w:'critico',a:'Citação fora de ordem é apontada na revisão técnica antes mesmo do mérito.'},
+    {id:'f2',t:'A legenda fica fora da área do gráfico, nunca sobreposta aos dados',w:'critico',a:'Legenda dentro do gráfico esconde dado e quebra na redução para uma coluna.'},
+    {id:'f3',t:'Fontes legíveis após redução ao tamanho de uma coluna',w:'critico',a:'Teste imprimindo a figura com 8 cm de largura.'},
+    {id:'f4',t:'Paleta distinguível por quem não diferencia vermelho e verde',w:'padrao',a:'Cerca de 8 por cento dos homens têm alguma deficiência de visão de cores.'},
+    {id:'f5',t:'Nenhuma tabela repete o que a figura já mostra',w:'padrao',a:'Escolha um dos dois. O outro vai para material suplementar.'},
+    {id:'f6',t:'Todos os eixos têm unidade e todas as siglas estão definidas na legenda',w:'critico',a:'A figura precisa funcionar recortada e colada em uma apresentação alheia.'}
+  ]},
+  {curto:'Gráfico', nome:'Resumo gráfico e vídeo resumo', frase:'São as peças que circulam sozinhas, em rede social e na página da revista. Uma mensagem, cinco segundos de leitura. Não é a figura mais bonita do artigo, é a mais simples.', mod:'grafico', itens:[
+    {id:'g1',t:'Transmite uma única mensagem, compreensível em cinco segundos',w:'critico',a:'Se precisa de leitura atenta, não é abstract gráfico, é figura.'},
+    {id:'g2',t:'Não é a reprodução de uma figura já presente no artigo',w:'padrao',a:'Algumas revistas recusam por duplicação.'},
+    {id:'g3',t:'Fluxo de leitura claro, da esquerda para a direita ou de cima para baixo',w:'padrao',a:'Sem setas cruzadas e sem retorno.'},
+    {id:'g4',t:'Sem parágrafos, apenas rótulos curtos',w:'padrao',a:'Texto corrido em abstract gráfico não é lido.'},
+    {id:'g5',t:'Dimensão, resolução e formato conforme a exigência da revista',w:'critico',a:'Em geral 300 dpi, com largura mínima definida no guia de autores.'},
+    {id:'g6',t:'Legível em miniatura, no tamanho em que aparece na lista de artigos',w:'padrao',a:'Reduza para 200 pixels de largura e teste.'},
+    {id:'g7',t:'Todos os elementos gráficos são próprios ou têm licença de uso',w:'critico',a:'Ícone de banco de imagens sem licença gera pedido de retirada depois de publicado.'},
+    {id:'g8',t:'Se houver vídeo resumo, ele tem até três minutos e começa pelo achado',w:'padrao',a:'Vídeo que começa por revisão de literatura perde o espectador nos primeiros vinte segundos.'},
+    {id:'g9',t:'O vídeo tem legenda e áudio audível sem fone',w:'padrao',a:'A maior parte da audiência assiste sem som, em celular.'},
+    {id:'g10',t:'O roteiro cabe em quatro blocos: problema, o que fizemos, o que achamos, por que importa',w:'padrao',a:'Um bloco por parágrafo falado, cerca de quarenta segundos cada.'}
+  ]},
+  {curto:'Dados', nome:'Dados e reprodutibilidade', frase:'Artigo com dados disponíveis é mais citado e sobrevive melhor à contestação. Depositar antes de submeter transforma exigência editorial em rotina resolvida.', mod:'dados', itens:[
+    {id:'d1',t:'Dados depositados em repositório com DOI, antes da submissão',w:'critico',a:'Muitas revistas exigem o identificador já no formulário de submissão.'},
+    {id:'d2',t:'Licença de uso dos dados definida',w:'padrao',a:'CC BY, CC0 ou licença restritiva quando há dado sensível.'},
+    {id:'d3',t:'Código ou roteiro de análise disponível e executável por terceiros',w:'padrao',a:'Inclui versão dos programas e das bibliotecas utilizadas.'},
+    {id:'d4',t:'Declaração de disponibilidade de dados redigida',w:'critico',a:'Seção obrigatória na maior parte das revistas indexadas.'},
+    {id:'d5',t:'Dado sensível ou de terceiros tratado conforme a legislação de proteção de dados',w:'critico',a:'Desidentificação, consentimento e acordo de uso quando aplicável.'}
+  ]},
+  {curto:'Envio', nome:'Carta ao editor e checagem final', frase:'A carta ao editor é lida antes do manuscrito e decide a triagem. Ela responde a uma só pergunta: por que este trabalho, nesta revista, agora.', mod:'submissao', itens:[
+    {id:'s1',t:'A carta diz por que o trabalho pertence a esta revista, citando o escopo dela',w:'critico',a:'Carta genérica sinaliza submissão em série e pesa contra na triagem.'},
+    {id:'s2',t:'Declaração de originalidade e de não submissão simultânea incluída',w:'critico',a:'Exigência praticamente universal.'},
+    {id:'s3',t:'Sugestão de revisores sem conflito de interesse, se a revista pedir',w:'padrao',a:'Sem coautoria recente, sem mesma instituição, sem orientação em comum.'},
+    {id:'s4',t:'Formatação conferida item a item contra o guia de autores',w:'critico',a:'Margem, fonte, numeração de linhas, estilo de referência e ordem das seções.'},
+    {id:'s5',t:'Arquivos de figura no formato e resolução exigidos, nomeados corretamente',w:'padrao',a:'Nome de arquivo desorganizado atrasa a produção editorial.'},
+    {id:'s6',t:'Manuscrito lido em voz alta pelo autor correspondente antes de enviar',w:'padrao',a:'A leitura em voz alta revela frases quebradas que a leitura silenciosa perdoa.'}
+  ]},
+  {curto:'Difusão', nome:'Plano de difusão', frase:'A difusão executa o que a estação da revista decidiu. Ela amplia o alcance, não conserta escolha ruim de revista, de título ou de palavras-chave.', mod:'difusao', itens:[]},
+  {curto:'Revisão', nome:'Resposta aos revisores', frase:'Toda observação recebe resposta, inclusive as recusadas. Resposta boa aponta onde o texto mudou, com número de linha.', mod:'revisores', itens:[
+    {id:'v1',t:'Cada comentário foi respondido individualmente, nenhum agrupado sem resposta',w:'critico',a:'Comentário sem resposta é motivo comum de segunda rodada.'},
+    {id:'v2',t:'As discordâncias estão fundamentadas com evidência, não com opinião',w:'critico',a:'Discordar é permitido. Discordar sem argumento não é.'},
+    {id:'v3',t:'A resposta indica exatamente onde o texto foi alterado',w:'padrao',a:'Página e linha da versão revisada.'},
+    {id:'v4',t:'O tom é técnico, sem ironia e sem defesa pessoal',w:'padrao',a:'O editor lê a carta inteira. O tom pesa.'}
+  ]}
+];
+
+var CREDIT=['Conceituação','Curadoria de dados','Análise formal','Obtenção de financiamento','Investigação','Metodologia','Administração do projeto','Recursos','Software','Supervisão','Validação','Visualização','Redação do rascunho original','Redação, revisão e edição'];
+var ICMJE=[
+ 'Contribuição substancial à concepção do trabalho ou à obtenção, análise ou interpretação dos dados',
+ 'Redação do manuscrito ou revisão crítica de conteúdo intelectual relevante',
+ 'Aprovação final da versão a ser publicada',
+ 'Responsabilidade por todos os aspectos do trabalho, inclusive por questões de exatidão e integridade'
+];
+
+var DIFUSAO=[
+ {id:'x1',t:'Depositar preprint em servidor da área, se a revista permitir',a:'SciELO Preprints, bioRxiv, EarthArXiv, EngrXiv, SSRN.'},
+ {id:'x2',t:'Registrar o artigo no ORCID de todos os autores',a:'Feito uma vez, alimenta automaticamente vários sistemas de avaliação.'},
+ {id:'x3',t:'Atualizar o Lattes de todos os autores brasileiros na semana da publicação',a:'A janela de coleta da CAPES não espera.'},
+ {id:'x4',t:'Depositar a versão aceita no repositório institucional',a:'Rota verde de acesso aberto, permitida pela maioria das revistas após embargo.'},
+ {id:'x5',t:'Escrever um resumo de uma página em linguagem não técnica',a:'Direcionado a gestor público, conselho de bacia, secretaria ou comunidade envolvida.'},
+ {id:'x6',t:'Enviar o artigo a dez pesquisadores citados no próprio texto',a:'Mensagem curta e pessoal. É o canal de maior conversão em leitura efetiva.'},
+ {id:'x7',t:'Acionar a assessoria de comunicação da instituição com texto pronto',a:'Assessoria sem material pronto não publica. Entregue título, três parágrafos e uma imagem.'},
+ {id:'x8',t:'Preparar uma figura e três frases para redes sociais',a:'Use o abstract gráfico. Sem jargão e sem sigla.'},
+ {id:'x9',t:'Apresentar o achado em um evento da área nos doze meses seguintes',a:'Congresso, seminário do programa ou reunião do projeto.'},
+ {id:'x10',t:'Levar o resultado para a sala de aula ou para a extensão',a:'Disciplina da pós, oficina, material didático ou curso de formação.'},
+ {id:'x11',t:'Definir quem acompanha as métricas e em que prazo',a:'Dimensions, Altmetric e Google Acadêmico aos seis e aos doze meses.'},
+ {id:'x12',t:'Registrar o produto nos relatórios do programa e do projeto financiado',a:'Relatório CNPq, FAPEMAT, CAPES e ficha do PPG.'}
+];
+
+/* ---------- utilidades ---------- */
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function el(id){ return document.getElementById(id); }
+
+function normaliza(s){
+  return String(s||'').toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9\s-]/g,' ').replace(/\s+/g,' ').trim();
+}
+function palavras(s){ return normaliza(s).split(' ').filter(function(w){return w.length>0}); }
+
+var PARADAS=('a o e de da do das dos em no na nos nas um uma uns umas por para com sem sob sobre entre ao aos as os que qual quais quando onde como se ja nao mais menos muito pouco todo toda todos todas este esta estes estas esse essa esses essas aquele aquela isso foi sao ser sao tem ter foram sera serao pode podem deve devem entre ainda tambem apenas cada seu sua seus suas nosso nossa area estudo estudos trabalho artigo presente resultado resultados dados analise avaliacao objetivo objetivos metodo metodos utilizado utilizada utilizados observado observados verificado maior menor alta baixa alto baixo entre durante atraves partir base bem mesmo outro outra outros outras '+
+ 'the of and in to for on with a an is are was were be been by from that this these those which as at it its their our we they has have had can may also more most such using used use between within during after before than not but only both each other others study studies paper article present results result data analysis objective method methods showed show shows found observed high low higher lower significant significantly').split(/\s+/);
+var PARADAS_SET={}; PARADAS.forEach(function(w){ PARADAS_SET[w]=1; });
+
+/* ORCID, ISO 7064 MOD 11-2 */
+function validaOrcid(s){
+  var d=String(s||'').replace(/[^0-9Xx]/g,'').toUpperCase();
+  if(d.length!==16) return {ok:false,msg:'ORCID precisa ter 16 caracteres. Formato 0000-0000-0000-0000.'};
+  var total=0;
+  for(var i=0;i<15;i++){
+    var n=d.charCodeAt(i)-48;
+    if(n<0||n>9) return {ok:false,msg:'Os quinze primeiros caracteres devem ser dígitos.'};
+    total=(total+n)*2;
+  }
+  var resto=total%11, res=(12-resto)%11, dv=(res===10)?'X':String(res);
+  if(dv!==d[15]) return {ok:false,msg:'Dígito verificador não confere. Confira o número no site do ORCID.'};
+  return {ok:true,msg:'ORCID válido.'};
+}
+function formataOrcid(s){
+  var d=String(s||'').replace(/[^0-9Xx]/g,'').toUpperCase().slice(0,16);
+  return d.replace(/(.{4})(?=.)/g,'$1-');
+}
+function validaLattes(s){
+  var d=String(s||'').replace(/\D/g,'');
+  if(!d) return {ok:null,msg:''};
+  if(d.length!==16) return {ok:false,msg:'O identificador Lattes tem 16 dígitos.'};
+  return {ok:true,msg:'Formato válido.'};
+}
+
+/* ---------- progresso ---------- */
+function progEstacao(i){
+  var es=ESTACOES[i], lista=itensDe(i), feitos=0;
+  lista.forEach(function(it){ if(E.itens[it.id]) feitos++; });
+  var extra=modProgresso(es.mod);
+  var total=lista.length+extra.total, ok=feitos+extra.feitos;
+  return {feitos:ok,total:total,pct: total? ok/total : 0};
+}
+function itensDe(i){
+  var es=ESTACOES[i], base=es.itens.slice();
+  if(es.mod==='difusao'){ base=DIFUSAO.map(function(d){return {id:d.id,t:d.t,w:'padrao',a:d.a}}); }
+  if(E.area && AREAS[E.area] && (i===0||es.mod==='dados')){ }
+  return base;
+}
+function modProgresso(mod){
+  var f=0,t=0;
+  if(mod==='rota'){ t=3; if(E.area)f++; if(E.tipo)f++; if(E.diretriz)f++; }
+  if(mod==='revista'){ t=3; if(E.revistas.length)f++; if(E.revistaEscolhida)f++; if(E.rotaOA)f++; }
+  if(mod==='titulo'){ t=1; if((E.trabalho.titulo||'').trim().length>10)f++; }
+  if(mod==='resumo'){ t=1; if(palavras(E.trabalho.resumo).length>50)f++; }
+  if(mod==='chaves'){ t=1; if(E.chaves.length>=4)f++; }
+  if(mod==='autoria'){ t=2; if(E.autores.length)f++; if(E.autores.some(function(a){return a.correspondente}))f++; }
+  if(mod==='meta'){ t=1; if(E.meta.instituicao)f++; }
+  if(mod==='figuras'){ t=1; if(E.figuras.length)f++; }
+  if(mod==='dados'){ t=1; if(E.dados.repositorio)f++; }
+  return {feitos:f,total:t};
+}
+function progGeral(){
+  var f=0,t=0;
+  for(var i=0;i<ESTACOES.length;i++){ var p=progEstacao(i); f+=p.feitos; t+=p.total; }
+  return t? f/t : 0;
+}
+
+/* ---------- carta de rota ---------- */
+var PORTOS=(function(){var a=[];for(var i=0;i<ESTACOES.length;i++){a.push(40+i*56);}return a;})();
+var MAR_PRONTO=false;
+
+function ondaPath(y){
+  var d='M -120 '+y;
+  for(var x=-120;x<1000;x+=120){ d+=' q 30 -9 60 0 t 60 0'; }
+  return d;
+}
+function montarMar(){
+  var W=840,H=252,AGUA=196;
+  var s='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Travessia do artigo, treze portos até a publicação">';
+  s+='<defs><linearGradient id="gradRota" gradientUnits="userSpaceOnUse" x1="40" y1="0" x2="800" y2="0">'+
+     '<stop offset="0%" stop-color="#1B4DD1"/><stop offset="55%" stop-color="#E6187C"/><stop offset="100%" stop-color="#FF6A13"/></linearGradient></defs>';
+  s+='<defs><linearGradient id="ceu" x1="0" y1="0" x2="0" y2="1">'+
+     '<stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#F7FAFF"/></linearGradient></defs>';
+  s+='<rect width="'+W+'" height="'+H+'" fill="url(#ceu)"/>';
+  /* gaivotas */
+  s+='<g stroke="#C4D5FF" stroke-width="1.6" fill="none" stroke-linecap="round">'+
+     '<path d="M 786 40 q 7 -6 13 0 q 6 -6 13 0"/>'+
+     '<path d="M 806 66 q 5 -4 9 0 q 4 -4 9 0"/>'+
+     '</g>';
+  /* água */
+  s+='<rect x="0" y="'+AGUA+'" width="'+W+'" height="'+(H-AGUA)+'" fill="#F2F6FF"/>';
+  s+='<g class="onda"><path d="'+ondaPath(AGUA)+'" fill="none" stroke="#C4D5FF" stroke-width="1.8"/></g>';
+  s+='<g class="onda" style="animation-duration:13s;opacity:.6"><path d="'+ondaPath(AGUA+11)+'" fill="none" stroke="#DDE3F2" stroke-width="1.6"/></g>';
+  /* rota percorrida e por percorrer */
+  s+='<line x1="40" y1="'+AGUA+'" x2="800" y2="'+AGUA+'" stroke="#DDE3F2" stroke-width="3"/>';
+  s+='<line id="rotaFeita" x1="40" y1="'+AGUA+'" x2="40" y2="'+AGUA+'" stroke="url(#gradRota)" stroke-width="3.6" stroke-linecap="round"/>';
+  /* portos */
+  for(var i=0;i<PORTOS.length;i++){
+    var x=PORTOS[i], banda=(i%2===0), yr=banda?34:78, yn=banda?20:64;
+    s+='<line x1="'+x+'" y1="'+(yr+7)+'" x2="'+x+'" y2="'+(AGUA-13)+'" stroke="#EEF2FD" stroke-width="1"/>';
+    s+='<g tabindex="0" role="button" aria-label="Porto '+(i+1)+', '+esc(ESTACOES[i].curto)+'" onclick="P.ir('+i+')" onkeydown="if(event.key===\'Enter\')P.ir('+i+')" style="cursor:pointer">';
+    s+='<rect x="'+(x-13)+'" y="'+(AGUA-6)+'" width="26" height="6" rx="1.5" fill="#DDE3F2" id="cais'+i+'"/>';
+    s+='<circle id="anel'+i+'" cx="'+x+'" cy="'+(AGUA-14)+'" r="14" fill="none" stroke="#E6187C" stroke-width="1.4" opacity="0"/>';
+    s+='<circle id="pc'+i+'" cx="'+x+'" cy="'+(AGUA-14)+'" r="7.5" fill="#ffffff" stroke="#1B4DD1" stroke-width="2"/>';
+    s+='<path id="ph'+i+'" d="M '+x+' '+(AGUA-21.5)+' A 7.5 7.5 0 0 1 '+x+' '+(AGUA-6.5)+' Z" fill="#FF6A13" opacity="0"/>';
+    s+='<text x="'+x+'" y="'+yn+'" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#5A6480">'+(i+1)+'</text>';
+    s+='<text id="pl'+i+'" x="'+x+'" y="'+yr+'" text-anchor="middle" font-family="Georgia,serif" font-size="11.5" fill="#15224A">'+esc(ESTACOES[i].curto)+'</text>';
+    s+='</g>';
+  }
+  /* porto final */
+  s+='<line x1="800" y1="'+(AGUA-40)+'" x2="800" y2="'+AGUA+'" stroke="#1B4DD1" stroke-width="2.4" stroke-linecap="round"/>';
+  s+='<path id="bandeira" d="M 801 '+(AGUA-39)+' L 823 '+(AGUA-33)+' L 801 '+(AGUA-27)+' Z" fill="#DDE3F2"/>';
+  s+='<text x="800" y="'+(AGUA+22)+'" text-anchor="middle" font-family="Georgia,serif" font-size="9.5" fill="#E6187C" letter-spacing="1.2">PUBLICADO</text>';
+  /* navio */
+  s+='<g id="navio"><g id="casco">'+
+     '<path d="M 0 14 L 44 14 L 37 27 L 7 27 Z" fill="#1B4DD1"/>'+
+     '<line x1="22" y1="14" x2="22" y2="-24" stroke="#15224A" stroke-width="2.2" stroke-linecap="round"/>'+
+     '<path d="M 24 -21 L 41 10 L 24 10 Z" fill="#FF6A13"/>'+
+     '<path d="M 20 -15 L 5 10 L 20 10 Z" fill="#E6187C"/>'+
+     '<path d="M 22 -24 L 35 -20 L 22 -16 Z" fill="#1B4DD1"/>'+
+     '</g></g>';
+  s+='</svg>';
+  el('carta').innerHTML = s +
+    '<div class="legenda-carta">'+
+    '<span><i class="pt"></i> porto não visitado</span>'+
+    '<span><i class="pt meio"></i> em obras</span>'+
+    '<span><i class="pt cheio"></i> liberado</span>'+
+    '<span style="margin-left:auto">travessia: <b id="pctMar">0 por cento</b></span>'+
+    '</div>';
+  MAR_PRONTO=true;
+}
+function atualizarMar(){
+  if(!MAR_PRONTO) montarMar();
+  var AGUA=196, ultimo=40;
+  for(var i=0;i<PORTOS.length;i++){
+    var p=progEstacao(i).pct, c=el('pc'+i), meio=el('ph'+i), rot=el('pl'+i), anel=el('anel'+i), cais=el('cais'+i);
+    if(!c) continue;
+    c.setAttribute('fill', p>=0.999? '#FF6A13':'#ffffff');
+    meio.setAttribute('opacity', (p>0&&p<0.999)? '1':'0');
+    cais.setAttribute('fill', p>=0.999? '#FFD4B0':'#DDE3F2');
+    anel.setAttribute('opacity', i===atual? '1':'0');
+    rot.setAttribute('fill', i===atual? '#E6187C':'#15224A');
+    rot.setAttribute('font-weight', i===atual? '700':'400');
+  }
+  var cortou=false;
+  for(var i=0;i<PORTOS.length;i++){
+    if(progEstacao(i).pct>=0.999 && !cortou) ultimo=PORTOS[i]; else cortou=true;
+  }
+  var rf=el('rotaFeita'); if(rf) rf.setAttribute('x2', ultimo);
+  var band=el('bandeira'); if(band) band.setAttribute('fill', progGeral()>=0.999? '#E6187C':'#DDE3F2');
+  var nav=el('navio');
+  if(nav){ var nx=PORTOS[Math.max(atual,0)]-54, ny=AGUA-27;
+    nav.style.transform='translate('+nx+'px,'+ny+'px)'; nav.setAttribute('transform','translate('+nx+','+ny+')'); }
+  var pm=el('pctMar'); if(pm) pm.textContent=Math.round(progGeral()*100)+' por cento';
+  el('barra').style.width=(progGeral()*100)+'%';
+}
+function desenhaCarta(){ atualizarMar(); }
+
+/* ---------- bloco de apresentação ---------- */
+function desenhaSobre(){
+  var alvo=el('estacao');
+  var s='<div class="sobre">';
+  s+='<div class="eyebrow">Instrumento aberto de escrita científica</div>';
+  s+='<h2>Um artigo é construído, não é escrito de uma vez</h2>';
+  s+='<p class="lide">O ESTALEIRO acompanha a travessia de um manuscrito por quatorze portos, da primeira decisão até a publicação. Em cada porto há verificações, ferramentas de escrita e diagnósticos que apontam o que ainda não está resolvido. O navio só avança quando o porto é liberado.</p>';
+  s+='<p>Nada é enviado para servidor algum. O trabalho fica neste navegador e pode ser salvo em arquivo para continuar em outro computador, entregar ao orientador ou passar para um coautor. É de uso livre, sem cadastro e sem custo, por qualquer programa de pós-graduação, em qualquer grande área.</p>';
+  s+='<div class="colunas">';
+  s+='<div class="col"><h4>O que ela faz</h4><p>Testa o título contra critérios de recuperação em bases, analisa os seis movimentos do resumo, gera e depura palavras-chave, aplica o portão ICMJE de autoria com papéis CRediT, valida ORCID por dígito verificador, confere ordem de citação de figuras e monta carta ao editor, dossiê de submissão e plano de difusão.</p></div>';
+  s+='<div class="col"><h4>Para quem</h4><p>Mestrandos e doutorandos escrevendo o primeiro artigo, orientadores que precisam de um critério comum para devolver manuscritos, grupos de pesquisa com muitos coautores, disciplinas de metodologia e redação científica, e comissões de programa que avaliam produção antes da submissão.</p></div>';
+  s+='<div class="col"><h4>O que ela não faz</h4><p>Não escreve o artigo por você. Não calcula percentual de contribuição de autoria, porque isso não existe em periódico algum e só produz conflito. Não substitui a leitura do guia de autores da revista escolhida. Ela organiza decisões, expõe pendências e impede que erros caros sejam descobertos tarde.</p></div>';
+  s+='</div>';
+  s+='<h3 style="font-size:19px;font-family:Georgia,serif;margin-top:6px">Os quatorze portos</h3>';
+  s+='<p style="margin-bottom:4px">Percorra na ordem. Os portos 2 a 5 decidem quase toda a circulação futura do artigo, e nenhuma divulgação posterior corrige uma escolha ruim feita ali.</p>';
+  s+='<div class="mapa">MAPA</div>';
+  s+='<div class="assinatura"><b>Concepção e conteúdo</b>'+
+     '<p>Ernandes Sobreira Oliveira Junior e Carla Galbiati. Universidade do Estado de Mato Grosso, Campus de Cáceres, Mato Grosso, Brasil.</p>'+
+     '<p>Distribuição livre para uso acadêmico. Ao citar a plataforma em relatórios de programa, mantenha a atribuição aos autores.</p></div>';
+  s+='<div style="margin-top:20px"><button class="primario" onclick="P.ir(0)">Zarpar do porto 1</button></div>';
+  s+='</div>';
+  alvo.innerHTML=s.replace('MAPA', mapaPortos());
+}
+var RESUMO_PORTOS={
+ 'Base':'Define a mensagem única, o tipo de estudo e o perfil de área que ajusta todo o restante.',
+ 'Revista':'Escolhe o periódico antes da escrita e decide preprint e acesso aberto, que é onde a visibilidade se define.',
+ 'Corpo':'A ampulheta do artigo. Diagramas de como estruturar introdução, método, resultado, discussão, limitações e conclusão.',
+ 'Título':'Testa extensão, termos de busca, siglas e se o título afirma um achado ou apenas anuncia um tema.',
+ 'Resumo':'Procura os seis movimentos do resumo e cobra resultado com magnitude e incerteza.',
+ 'Chaves':'Extrai candidatas do resumo, marca as redundantes com o título e gera termos complementares.',
+ 'Autoria':'Aplica o portão ICMJE de quatro critérios, distribui papéis CRediT e registra o acordo de ordem.',
+ 'IDs':'Valida ORCID por dígito verificador, padroniza afiliação e reúne financiamento, ética, conflito e uso de IA.',
+ 'Figuras':'Confere ordem de citação, resolução, legenda fora da área e acessibilidade de cor.',
+ 'Gráfico':'Composição do resumo gráfico e roteiro do vídeo resumo, com referências externas.',
+ 'Dados':'Depósito com identificador, licença, código e declaração de disponibilidade.',
+ 'Envio':'Monta a carta ao editor e faz a conferência final contra o guia de autores.',
+ 'Difusão':'Doze ações de circulação, cada uma com responsável e prazo.',
+ 'Revisão':'Matriz de resposta aos revisores e carta ao editor da versão revisada.'
+};
+function mapaPortos(){
+  var s='';
+  ESTACOES.forEach(function(es,i){
+    var d=RESUMO_PORTOS[es.curto]||es.frase.slice(0,110);
+    s+='<a onclick="P.ir('+i+')" tabindex="0" onkeydown="if(event.key===\'Enter\')P.ir('+i+')"><i>PORTO '+(i+1)+'</i><b>'+esc(es.curto)+'</b><small>'+esc(d)+'</small></a>';
+  });
+  return s;
+}
+
+/* ---------- navegação ---------- */
+function desenhaRumos(){
+  var s='<button class="aba-sobre '+(atual===-1?'ativo':'')+'" onclick="P.ir(-1)">Sobre</button>'+
+        '<button class="aba-sobre '+(atual===-2?'ativo':'')+'" onclick="P.ir(-2)">Biblioteca</button>';
+  for(var i=0;i<ESTACOES.length;i++){
+    var p=progEstacao(i).pct;
+    var cls=p>=0.999?'pronto':(p>0?'andando':'');
+    s+='<button class="'+(i===atual?'ativo':'')+'" onclick="P.ir('+i+')"><i class="sinal '+cls+'"></i><b>'+(i+1)+'</b>'+esc(ESTACOES[i].curto)+'</button>';
+  }
+  el('rumos').innerHTML=s;
+}
+
+/* ---------- itens genéricos ---------- */
+function htmlItens(i){
+  var lista=itensDe(i);
+  if(!lista.length) return '';
+  var s='<div class="painel"><h3>Verificações</h3><div class="sub">Marque apenas o que estiver de fato resolvido. A obra não avança sozinha.</div>';
+  lista.forEach(function(it){
+    var on=!!E.itens[it.id];
+    s+='<div class="item '+(on?'feito':'')+'">'+
+       '<input type="checkbox" id="it_'+it.id+'" '+(on?'checked':'')+' onchange="P.marcar(\''+it.id+'\',this.checked)">'+
+       '<div class="txt"><b><label for="it_'+it.id+'">'+esc(it.t)+'</label></b><small>'+esc(it.a||'')+'</small></div>'+
+       (it.w==='critico'?'<span class="tag critico">crítico</span>':'<span class="tag padrao">padrão</span>')+
+       '</div>';
+  });
+  s+='</div>';
+  return s;
+}
+function htmlNota(i){
+  var v=E.notas['n'+i]||'';
+  return '<div class="painel"><h3>Anotações desta estação</h3><div class="sub">Decisões tomadas, pendências e nomes de quem ficou responsável.</div>'+
+    '<textarea onchange="P.nota('+i+',this.value)" placeholder="Escreva aqui">'+esc(v)+'</textarea></div>';
+}
+
+/* ---------- módulos ---------- */
+function modRota(){
+  var a=AREAS[E.area];
+  var s='<div class="painel"><h3>Identificação</h3><div class="sub">Estes campos alimentam a carta ao editor e o dossiê de submissão.</div>';
+  s+='<div class="grade g2">';
+  s+='<label class="campo"><span>Grande área</span><select onchange="P.set(\'area\',this.value)">'+
+     '<option value="">Selecione</option>'+
+     Object.keys(AREAS).map(function(k){return '<option value="'+k+'" '+(E.area===k?'selected':'')+'>'+esc(AREAS[k].nome)+'</option>'}).join('')+
+     '</select></label>';
+  s+='<label class="campo"><span>Tipo de estudo</span><select onchange="P.set(\'tipo\',this.value)">'+
+     ['','Original empírico','Revisão sistemática','Revisão narrativa','Nota técnica ou comunicação curta','Estudo de caso','Metodológico','Modelagem ou simulação','Dados descritivos (data paper)']
+     .map(function(v){return '<option '+(E.tipo===v?'selected':'')+'>'+esc(v)+'</option>'}).join('')+
+     '</select></label>';
+  s+='</div>';
+  if(a){
+    s+='<label class="campo"><span>Diretriz de relato aplicável</span><select onchange="P.set(\'diretriz\',this.value)">'+
+       [''].concat(a.diretrizes).map(function(v){return '<option '+(E.diretriz===v?'selected':'')+'>'+esc(v)+'</option>'}).join('')+
+       '</select></label>';
+    s+='<div class="diag">'+
+       '<div class="aviso neutro"><b>Exigências éticas típicas da área.</b> '+esc(a.etica)+'</div>'+
+       '<div class="aviso neutro"><b>Repositórios de dados usuais.</b> '+esc(a.repositorios)+'</div>'+
+       '<div class="aviso neutro"><b>Vocabulário controlado.</b> '+esc(a.vocabulario)+'</div>'+
+       '</div>';
+    s+='<h3 style="margin-top:18px;font-size:15px">Verificações próprias da área</h3>';
+    a.extras.forEach(function(t,ix){
+      var id='ax_'+E.area+'_'+ix, on=!!E.itens[id];
+      s+='<div class="item '+(on?'feito':'')+'"><input type="checkbox" id="it_'+id+'" '+(on?'checked':'')+' onchange="P.marcar(\''+id+'\',this.checked)">'+
+         '<div class="txt"><b><label for="it_'+id+'">'+esc(t)+'</label></b></div><span class="tag padrao">área</span></div>';
+    });
+  } else {
+    s+='<div class="diag"><div class="aviso alerta">Escolha a grande área para liberar as verificações específicas, as exigências éticas e os repositórios sugeridos.</div></div>';
+  }
+  s+='</div>';
+  return s;
+}
+
+function modRevista(){
+  var s='<div class="painel"><h3>Comparação de revistas</h3><div class="sub">Compare no máximo três. Critérios eliminatórios aparecem em vermelho e não se compensam com pontuação em outro campo.</div>';
+  s+='<div class="rolagem"><table><thead><tr><th style="width:150px">Critério</th>';
+  E.revistas.forEach(function(r,ix){ s+='<th>Opção '+(ix+1)+' <button class="mini risco" style="float:right" onclick="P.delRevista('+ix+')">remover</button></th>'; });
+  s+='</tr></thead><tbody>';
+  var campos=[
+    ['nome','Nome da revista','text'],
+    ['issn','ISSN','text'],
+    ['escopo','Aderência ao escopo','sel:|Total|Parcial|Fora do escopo'],
+    ['artigos','Li três artigos recentes','sel:|Sim|Não'],
+    ['indexacao','Indexação','text'],
+    ['qualis','Qualis ou métrica da área','text'],
+    ['decisao','Dias até a primeira decisão','text'],
+    ['aceite','Taxa de aceite estimada','text'],
+    ['apc','Taxa de publicação','text'],
+    ['isencao','Isenção ou desconto disponível','sel:|Sim|Não|Não se aplica'],
+    ['oa','Rota de acesso aberto','sel:|Diamante|Dourada|Verde|Híbrida|Fechada'],
+    ['preprint','Aceita preprint prévio','sel:|Sim|Não|Não verificado'],
+    ['palavras','Limite de palavras do texto','text'],
+    ['limresumo','Limite do resumo','text'],
+    ['grafico','Exige abstract gráfico','sel:|Sim|Opcional|Não']
+  ];
+  campos.forEach(function(c){
+    s+='<tr><td><b>'+esc(c[1])+'</b></td>';
+    E.revistas.forEach(function(r,ix){
+      if(c[2]==='text'){
+        s+='<td><input type="text" value="'+esc(r[c[0]]||'')+'" onchange="P.setRevista('+ix+',\''+c[0]+'\',this.value)"></td>';
+      } else {
+        var ops=c[2].split(':')[1].split('|');
+        s+='<td><select onchange="P.setRevista('+ix+',\''+c[0]+'\',this.value)">'+
+           ops.map(function(o){return '<option '+((r[c[0]]||'')===o?'selected':'')+'>'+esc(o)+'</option>'}).join('')+'</select></td>';
+      }
+    });
+    s+='</tr>';
+  });
+  s+='</tbody></table></div>';
+  if(E.revistas.length<3) s+='<button class="mini primario" style="margin-top:10px" onclick="P.addRevista()">Acrescentar revista</button>';
+  s+='<div class="diag" id="diagRevista">'+diagRevista()+'</div>';
+  s+='<div class="grade g2" style="margin-top:14px">';
+  s+='<label class="campo"><span>Revista escolhida</span><select onchange="P.set(\'revistaEscolhida\',this.value)">'+
+     '<option value="">Ainda não decidida</option>'+
+     E.revistas.map(function(r){var n=r.nome||'Sem nome';return '<option '+(E.revistaEscolhida===n?'selected':'')+'>'+esc(n)+'</option>'}).join('')+
+     '</select></label>';
+  s+='<label class="campo"><span>Rota de acesso aberto adotada</span><select onchange="P.set(\'rotaOA\',this.value)">'+
+     ['','Diamante, sem custo para autor e leitor','Dourada, com taxa paga','Verde, depósito no repositório institucional','Fechada, sem acesso aberto']
+     .map(function(v){return '<option '+(E.rotaOA===v?'selected':'')+'>'+esc(v||'Ainda não decidida')+'</option>'}).join('')+
+     '</select></label>';
+  s+='</div>';
+  s+='<label class="campo"><span>Decisão sobre preprint</span><select onchange="P.set(\'preprint\',this.value)">'+
+     ['','Depositar antes da submissão','Depositar apenas se houver recusa','Não depositar, revista não permite','Não depositar, decisão do grupo']
+     .map(function(v){return '<option '+(E.preprint===v?'selected':'')+'>'+esc(v||'Ainda não decidida')+'</option>'}).join('')+
+     '</select></label>';
+  s+='<div class="nota">Acesso aberto e preprint são as duas decisões desta estação que mais alteram a circulação futura do artigo. Depois da aceitação, quase nada disso pode ser revertido.</div>';
+  s+='</div>';
+  return s;
+}
+function diagRevista(){
+  var av=[];
+  E.revistas.forEach(function(r,ix){
+    var n=r.nome||('Opção '+(ix+1));
+    if(r.escopo==='Fora do escopo') av.push(['erro',n+': escopo não aderente. Critério eliminatório, nenhuma outra vantagem compensa.']);
+    if(r.artigos==='Não') av.push(['alerta',n+': você ainda não leu três artigos recentes dessa revista.']);
+    if(r.preprint==='Não' && (E.preprint||'').indexOf('Depositar antes')===0) av.push(['erro',n+': a revista não aceita preprint e a decisão registrada é depositar antes da submissão. Uma das duas precisa mudar.']);
+    if(r.preprint==='Não verificado') av.push(['alerta',n+': política de preprint não verificada.']);
+    if(r.apc && r.isencao==='Não') av.push(['alerta',n+': taxa de '+r.apc+' sem isenção. Confirme a fonte de recurso antes de submeter.']);
+  });
+  if(E.revistas.length===0) av.push(['neutro','Acrescente ao menos duas revistas para que a comparação tenha função.']);
+  if(E.revistas.length===1) av.push(['alerta','Com uma única opção não existe comparação, existe justificativa. Acrescente pelo menos mais uma.']);
+  if(E.revistas.length>=2 && !E.revistaEscolhida) av.push(['neutro','Escolha a revista antes de avançar para o título. O limite de palavras e o estilo dependem dela.']);
+  return av.map(function(a){return '<div class="aviso '+a[0]+'">'+esc(a[1])+'</div>'}).join('');
+}
+
+function modTitulo(){
+  var s='<div class="painel"><h3>Título</h3><div class="sub">Escreva e observe o diagnóstico. Ele é atualizado a cada alteração.</div>';
+  s+='<label class="campo"><span>Título completo</span><input type="text" id="inTitulo" value="'+esc(E.trabalho.titulo)+'" oninput="P.titulo(this.value)" placeholder="Escreva o título do artigo"></label>';
+  s+='<label class="campo"><span>Título curto para cabeçalho, se a revista exigir</span><input type="text" value="'+esc(E.trabalho.tituloCurto)+'" onchange="P.setT(\'tituloCurto\',this.value)" placeholder="Até 50 caracteres, em geral"></label>';
+  s+='<div class="diag" id="diagTitulo">'+diagTitulo()+'</div>';
+  s+='<div class="nota">Teste prático: escreva a busca que você faria para achar este trabalho sem saber que ele existe. Se os termos dessa busca não estiverem no título, o título ainda não está pronto.</div>';
+  s+='</div>';
+  return s;
+}
+function diagTitulo(){
+  var t=E.trabalho.titulo||'', ps=palavras(t), av=[];
+  if(!t.trim()) return '<div class="aviso neutro">Escreva o título para ver o diagnóstico.</div>';
+  av.push([ps.length>=8&&ps.length<=16?'bom':(ps.length<8?'alerta':'erro'), ps.length+' palavras. O intervalo mais eficaz fica entre 8 e 16. Acima de 20 a recuperação cai e o título é truncado em listas.']);
+  var vagos=['estudo sobre','analise de','uma abordagem','contribuicao ao','contribuicao para','consideracoes sobre','aspectos de','notas sobre','em busca de','um olhar sobre','reflexoes sobre'];
+  var nt=normaliza(t);
+  vagos.forEach(function(v){ if(nt.indexOf(v)===0||nt.indexOf(' '+v)>=0) av.push(['alerta','A expressão "'+v+'" ocupa espaço sem informar. O leitor já sabe que é um estudo.']); });
+  var siglas=(t.match(/\b[A-Z]{2,}\b/g)||[]).filter(function(x){return ['DNA','RNA','PIB','IA','PCR','GPS','UV','CO2','SIG','ONU','LED','RGB','IBGE','ONG'].indexOf(x)<0});
+  if(siglas.length) av.push(['alerta','Siglas no título: '+siglas.join(', ')+'. Sigla restrita reduz a recuperação por quem está fora do grupo.']);
+  var temNumero=/\d/.test(t);
+  var verbos=['aumenta','reduz','altera','explica','prediz','determina','controla','regula','associa','supera','difere','revela','indica'];
+  var informativo=verbos.some(function(v){return nt.indexOf(v)>=0}) || temNumero;
+  av.push([informativo?'bom':'alerta', informativo?'O título afirma algo, não apenas anuncia um tema.':'O título parece indicativo, apenas anuncia o tema. Títulos que declaram o achado são mais lidos e mais citados.']);
+  if(t.trim().slice(-1)==='.') av.push(['alerta','Título não termina com ponto final.']);
+  if(/\?/.test(t)) av.push(['neutro','Título em forma de pergunta. Funciona em revisão e ensaio, e enfraquece em artigo empírico com resultado claro.']);
+  /* redundância com palavras-chave */
+  if(E.chaves.length){
+    var dentro=E.chaves.filter(function(k){ return nt.indexOf(normaliza(k))>=0; });
+    if(dentro.length) av.push(['erro','Palavras-chave que repetem o título: '+dentro.join(', ')+'. Cada repetição é um caminho de busca desperdiçado.']);
+  }
+  var carga=ps.filter(function(w){return !PARADAS_SET[w] && w.length>3});
+  av.push(['neutro','Termos de busca efetivos neste título: '+(carga.length?carga.join(', '):'nenhum')+'.']);
+  return av.map(function(a){return '<div class="aviso '+a[0]+'">'+esc(a[1])+'</div>'}).join('');
+}
+
+function modResumo(){
+  var s='<div class="painel"><h3>Resumo</h3><div class="sub">O analisador procura seis movimentos: contexto, lacuna, objetivo, método, resultado com número e conclusão.</div>';
+  s+='<label class="campo"><span>Limite de palavras da revista</span><input type="number" style="max-width:160px" value="'+(E.trabalho.limiteResumo||250)+'" onchange="P.setT(\'limiteResumo\',parseInt(this.value)||250);P.atualizaResumo()"></label>';
+  s+='<label class="campo"><span>Texto do resumo</span><textarea id="inResumo" style="min-height:230px" oninput="P.resumo(this.value)" placeholder="Cole ou escreva o resumo">'+esc(E.trabalho.resumo)+'</textarea></label>';
+  s+='<div class="contador" id="contResumo"></div>';
+  s+='<div class="diag" id="diagResumo"></div>';
+  s+='</div>';
+  return s;
+}
+function diagResumo(){
+  var t=E.trabalho.resumo||'', ps=palavras(t), n=ps.length, lim=E.trabalho.limiteResumo||250, av=[];
+  var cont=el('contResumo');
+  if(cont){ cont.textContent=n+' de '+lim+' palavras'; cont.className='contador'+(n>lim?' excedeu':''); }
+  if(!t.trim()) return '<div class="aviso neutro">Escreva o resumo para ver o diagnóstico.</div>';
+  if(n>lim) av.push(['erro','Excedeu o limite em '+(n-lim)+' palavras.']);
+  else if(n<lim*0.6) av.push(['alerta','Você usou '+n+' palavras de '+lim+' disponíveis. Espaço ocioso no resumo é oportunidade perdida de indexação.']);
+  var nt=normaliza(t);
+  var marcas={
+    'lacuna':['no entanto','contudo','porem','pouco se sabe','permanece desconhecid','nao ha estudos','lacuna','ainda e incerto','raramente','poucos estudos','however','remains unknown','little is known','few studies'],
+    'objetivo':['objetivo','objetivamos','avaliamos','investigamos','este estudo','o presente estudo','buscamos','testamos','we aimed','this study','the aim'],
+    'metodo':['amostr','coleta','medimos','utilizamos','analise','modelo','experimento','entrevist','questionario','delineamento','we used','sampling','we measured'],
+    'conclusao':['concluimos','conclui-se','sugerem que','indicam que','os resultados apontam','portanto','we conclude','these results suggest']
+  };
+  Object.keys(marcas).forEach(function(m){
+    var achou=marcas[m].some(function(x){return nt.indexOf(x)>=0});
+    var rot={lacuna:'lacuna explicitada',objetivo:'objetivo declarado',metodo:'método descrito',conclusao:'conclusão fechada'}[m];
+    av.push([achou?'bom':'alerta', achou? ('Sinais de '+rot+' encontrados.') : ('Não encontrei sinais de '+rot+'. Confira se esse movimento está presente.')]);
+  });
+  var num=(t.match(/\d+[.,]?\d*\s*(%|por cento|mg|kg|km|m|ha|µ|mm|°C|g|L|anos)?/g)||[]).length;
+  av.push([num>=2?'bom':'erro', num>=2? ('O resumo traz '+num+' expressões numéricas.') : 'Resultado quantitativo ausente ou insuficiente. Um resumo sem magnitude e sem incerteza descreve um projeto, não um achado.']);
+  if(/\(\s*\d{4}\s*\)|et al\.?/i.test(t)) av.push(['erro','Há citação bibliográfica no resumo. A maioria das revistas não aceita.']);
+  var frases=t.split(/[.!?]+/).filter(function(f){return f.trim().length>0});
+  var longas=frases.filter(function(f){return palavras(f).length>40});
+  if(longas.length) av.push(['alerta',longas.length+' frase(s) com mais de 40 palavras. Quebre para facilitar tradução e leitura.']);
+  var sig=(t.match(/\b[A-Z]{2,}\b/g)||[]);
+  var semdef=sig.filter(function(x){ return t.indexOf('('+x+')')<0 && ['DNA','RNA','PIB','IA','PCR','GPS','CO2','UV'].indexOf(x)<0; });
+  if(semdef.length) av.push(['alerta','Siglas possivelmente não definidas: '+Array.from(new Set(semdef)).join(', ')+'.']);
+  if(/\b(eu|nós|nos)\b/i.test(t)===false && /\bwe\b/i.test(t)===false) av.push(['neutro','Resumo em voz impessoal. Confira se a revista prefere primeira pessoa do plural.']);
+  return av.map(function(a){return '<div class="aviso '+a[0]+'">'+esc(a[1])+'</div>'}).join('');
+}
+
+function extrair(){
+  var texto=(E.trabalho.resumo||'');
+  if(!texto.trim()) return [];
+  var ps=palavras(texto);
+  var uni={}, bi={};
+  for(var i=0;i<ps.length;i++){
+    var w=ps[i];
+    if(!PARADAS_SET[w] && w.length>3) uni[w]=(uni[w]||0)+1;
+    if(i<ps.length-1){
+      var w2=ps[i+1];
+      if(!PARADAS_SET[w] && !PARADAS_SET[w2] && w.length>3 && w2.length>3){
+        var b=w+' '+w2; bi[b]=(bi[b]||0)+1;
+      }
+    }
+  }
+  var lista=[];
+  Object.keys(bi).forEach(function(k){ if(bi[k]>=2) lista.push({termo:k,n:bi[k]*2.2,tipo:'composto'}); });
+  Object.keys(uni).forEach(function(k){ lista.push({termo:k,n:uni[k],tipo:'simples'}); });
+  lista.sort(function(a,b){return b.n-a.n});
+  var vistos={}, fim=[];
+  lista.forEach(function(o){
+    if(fim.length>=22) return;
+    if(vistos[o.termo]) return;
+    var dentroDeComposto = fim.some(function(f){ return f.tipo==='composto' && f.termo.indexOf(o.termo)>=0; });
+    if(o.tipo==='simples' && dentroDeComposto) return;
+    vistos[o.termo]=1; fim.push(o);
+  });
+  return fim;
+}
+function htmlSugeridas(){
+  var nt=normaliza(E.trabalho.titulo||'');
+  if(!E.sugeridas.length) return '';
+  return '<div class="chaves">'+E.sugeridas.map(function(o){
+    var t=(typeof o==='string')? o : (o.termo||'');
+    var por=(typeof o==='object' && o.motivo)? o.motivo : '';
+    var red=nt && nt.indexOf(normaliza(t))>=0;
+    var sel=E.chaves.indexOf(t)>=0;
+    return '<span class="chave '+(sel?'sel':(red?'red':''))+'" onclick="P.addChave(\''+esc(t).replace(/'/g,"\\'")+'\')" title="'+esc(por)+'">'+esc(t)+' <small>'+esc(por||'sugerido')+'</small></span>';
+  }).join('')+'</div>';
+}
+function modChaves(){
+  var nt=normaliza(E.trabalho.titulo||'');
+  var cand=extrair();
+  var s='<div class="painel"><h3>Extrator a partir do resumo</h3><div class="sub">Os termos em vermelho já aparecem no título. Escolhê-los não acrescenta caminho de busca algum, apenas ocupa espaço.</div>';
+  if(!cand.length){
+    s+='<div class="aviso neutro">Escreva o resumo na estação anterior para gerar candidatas.</div>';
+  } else {
+    s+='<div class="chaves">';
+    cand.forEach(function(c){
+      var red = nt && nt.indexOf(normaliza(c.termo))>=0;
+      var sel = E.chaves.indexOf(c.termo)>=0;
+      s+='<span class="chave '+(sel?'sel':(red?'red':''))+'" onclick="P.toggleChave(\''+esc(c.termo).replace(/'/g,"\\'")+'\')" title="'+(red?'Já aparece no título':'Não aparece no título')+'">'+esc(c.termo)+' <small>'+(red?'no título':c.tipo)+'</small></span>';
+    });
+    s+='</div>';
+  }
+  s+='<div class="painel" style="border-left-color:#E6187C;margin-top:18px"><h3>Termos complementares gerados</h3>'+
+     '<div class="sub">O extrator acima só encontra o que já está escrito no resumo. Para sinônimos, termos mais amplos e descritores de vocabulário controlado, é preciso um serviço de linguagem.</div>'+
+     '<button class="mini primario" onclick="P.gerarChaves()">Gerar termos complementares</button>'+
+     '<div id="saidaIA" style="margin-top:10px">'+(E.sugeridas.length? htmlSugeridas() : '')+'</div>'+
+     '<label class="campo" style="margin-top:12px"><span>Endereço do serviço, opcional</span>'+
+     '<input type="text" class="mono" value="'+esc(E.iaUrl||'')+'" onchange="P.set(\'iaUrl\',this.value)" placeholder="Deixe vazio dentro do Claude. Publicado em endereço próprio, informe o seu proxy"></label>'+
+     '</div>';
+  s+='<label class="campo" style="margin-top:16px"><span>Acrescentar termo que não veio do resumo</span>'+
+     '<input type="text" id="novaChave" placeholder="Termo de vocabulário controlado, termo amplo, sinônimo" onkeydown="if(event.key===\'Enter\'){P.addChave(this.value);this.value=\'\'}"></label>';
+  s+='<button class="mini primario" onclick="var c=document.getElementById(\'novaChave\');P.addChave(c.value);c.value=\'\'">Acrescentar</button>';
+  s+='<h3 style="margin-top:20px;font-size:15px">Conjunto escolhido</h3>';
+  if(!E.chaves.length) s+='<div class="aviso neutro" style="margin-top:8px">Nenhuma palavra-chave escolhida.</div>';
+  else {
+    s+='<div class="chaves">'+E.chaves.map(function(k){
+      var red=nt && nt.indexOf(normaliza(k))>=0;
+      return '<span class="chave '+(red?'red':'sel')+'" onclick="P.toggleChave(\''+esc(k).replace(/'/g,"\\'")+'\')">'+esc(k)+' <small>retirar</small></span>';
+    }).join('')+'</div>';
+  }
+  s+='<div class="diag">'+diagChaves()+'</div>';
+  var a=AREAS[E.area];
+  if(a) s+='<div class="nota">Confira ao menos duas escolhas contra o vocabulário controlado da sua área: '+esc(a.vocabulario)+'</div>';
+  s+='</div>';
+  return s;
+}
+function diagChaves(){
+  var nt=normaliza(E.trabalho.titulo||''), av=[];
+  if(!E.chaves.length) return '<div class="aviso neutro">Escolha entre quatro e seis termos.</div>';
+  var red=E.chaves.filter(function(k){return nt && nt.indexOf(normaliza(k))>=0});
+  var novos=E.chaves.length-red.length;
+  av.push([E.chaves.length>=4&&E.chaves.length<=6?'bom':'alerta', E.chaves.length+' palavras-chave escolhidas. A maioria das revistas pede entre quatro e seis.']);
+  if(red.length) av.push(['erro',red.length+' termo(s) repetem o título: '+red.join(', ')+'. Título e resumo já são indexados. Substitua por sinônimos, termos mais amplos ou descritores controlados.']);
+  av.push([novos>=3?'bom':'erro', novos+' termo(s) acrescentam caminhos de busca que o título não oferece. O mínimo aceitável é três.']);
+  var amplos=E.chaves.filter(function(k){return palavras(k).length===1});
+  if(!amplos.length) av.push(['alerta','Todos os termos são compostos. Um termo simples e mais amplo conecta o trabalho a uma agenda maior.']);
+  if(E.chaves.some(function(k){return palavras(k).length>4})) av.push(['alerta','Há termo com mais de quatro palavras. Descritor longo demais quase nunca é usado em busca.']);
+  return av.map(function(a){return '<div class="aviso '+a[0]+'">'+esc(a[1])+'</div>'}).join('');
+}
+
+function modAutoria(){
+  var s='<div class="painel"><h3>Portão ICMJE</h3><div class="sub">Os quatro critérios são cumulativos. Falhar em um coloca a pessoa nos agradecimentos, independentemente do volume de trabalho realizado.</div>';
+  if(!E.autores.length) s+='<div class="aviso neutro">Nenhum autor cadastrado.</div>';
+  E.autores.forEach(function(a,ix){
+    s+='<div class="cartao"><span class="ordem">'+(ix+1)+'º autor</span>';
+    s+='<div class="fechar"><button class="mini" onclick="P.moveAutor('+ix+',-1)" title="subir">↑</button> <button class="mini" onclick="P.moveAutor('+ix+',1)" title="descer">↓</button> <button class="mini risco" onclick="P.delAutor('+ix+')">remover</button></div>';
+    s+='<div class="grade g2" style="margin-top:6px">';
+    s+='<label class="campo"><span>Nome completo, na forma de citação</span><input type="text" value="'+esc(a.nome||'')+'" onchange="P.setAutor('+ix+',\'nome\',this.value)"></label>';
+    s+='<label class="campo"><span>Afiliação oficial</span><input type="text" value="'+esc(a.inst||'')+'" onchange="P.setAutor('+ix+',\'inst\',this.value)"></label>';
+    s+='<label class="campo"><span>E-mail</span><input type="email" value="'+esc(a.email||'')+'" onchange="P.setAutor('+ix+',\'email\',this.value)"></label>';
+    s+='<label class="campo"><span>ORCID</span><input type="text" class="mono" placeholder="0000-0000-0000-0000" value="'+esc(a.orcid||'')+'" onchange="P.setOrcid('+ix+',this.value)"></label>';
+    s+='<label class="campo"><span>Identificador Lattes, 16 dígitos</span><input type="text" class="mono" value="'+esc(a.lattes||'')+'" onchange="P.setAutor('+ix+',\'lattes\',this.value)"></label>';
+    s+='<label class="campo" style="grid-column:1/-1"><span>Por que esta pessoa é autora, em uma frase</span><input type="text" value="'+esc(a.justificativa||'')+'" onchange="P.setAutor('+ix+',\'justificativa\',this.value)" placeholder="O que ela fez que não poderia ter sido feito por outra pessoa"></label>';
+    s+='<label class="campo"><span>Autor correspondente</span><select onchange="P.setCorresp('+ix+',this.value)"><option value="nao" '+(!a.correspondente?'selected':'')+'>Não</option><option value="sim" '+(a.correspondente?'selected':'')+'>Sim</option></select></label>';
+    s+='</div>';
+    var vo=validaOrcid(a.orcid||''), vl=validaLattes(a.lattes||'');
+    if(a.orcid) s+='<div class="aviso '+(vo.ok?'bom':'erro')+'" style="margin-top:4px">'+esc(vo.msg)+'</div>';
+    if(a.lattes && vl.ok===false) s+='<div class="aviso erro" style="margin-top:4px">'+esc(vl.msg)+'</div>';
+    s+='<div class="icmje">';
+    ICMJE.forEach(function(c,ci){
+      var on=a.icmje&&a.icmje[ci];
+      s+='<label><input type="checkbox" '+(on?'checked':'')+' onchange="P.setIcmje('+ix+','+ci+',this.checked)"><span>'+esc(c)+'</span></label>';
+    });
+    s+='</div>';
+    s+='<div class="papeis">';
+    CREDIT.forEach(function(p){
+      var on=(a.credit||[]).indexOf(p)>=0;
+      s+='<label class="'+(on?'on':'')+'"><input type="checkbox" '+(on?'checked':'')+' onchange="P.setCredit('+ix+',\''+p.replace(/'/g,"\\'")+'\',this.checked)">'+esc(p)+'</label>';
+    });
+    s+='</div>';
+    var n=(a.icmje||[]).filter(Boolean).length;
+    s+='<div class="aviso '+(n===4?'bom':(n===0?'neutro':'erro'))+'" style="margin-top:10px">'+
+       (n===4? 'Cumpre os quatro critérios. Figura como autor.' : (n===0? 'Nenhum critério marcado ainda.' : 'Cumpre '+n+' de 4 critérios. Sem os quatro, a pessoa entra nos agradecimentos, não na autoria.'))+
+       '</div>';
+    s+='</div>';
+  });
+  s+='<button class="mini primario" onclick="P.addAutor()">Acrescentar autor</button>';
+  s+='<div class="diag" style="margin-top:14px">'+diagAutoria()+'</div>';
+  s+='<div class="nota">O ESTALEIRO não calcula percentual de contribuição, e isso é deliberado. Nenhum periódico aceita autoria fracionada, o CRediT é qualitativo por desenho, e um número dá aparência de objetividade a uma decisão que é de mérito e de acordo entre pessoas.</div>';
+  s+='</div>';
+  s+='<div class="painel"><h3>Registro do acordo de ordem</h3><div class="sub">Escreva aqui a data e os termos acordados. Imprima e faça circular entre os autores.</div>'+
+     '<textarea onchange="P.nota(\'acordo\',this.value)" placeholder="Em [data], os autores acordaram a seguinte ordem e os seguintes papéis...">'+esc(E.notas['acordo']||'')+'</textarea>'+
+     '<div style="margin-top:8px"><button class="mini" onclick="P.textoCredit()">Gerar parágrafo CRediT</button></div>'+
+     '<div id="saidaCredit"></div></div>';
+  return s;
+}
+function diagAutoria(){
+  var av=[];
+  if(!E.autores.length) return '<div class="aviso neutro">Cadastre os autores.</div>';
+  var corresp=E.autores.filter(function(a){return a.correspondente});
+  if(corresp.length===0) av.push(['erro','Nenhum autor correspondente definido. A submissão não avança sem ele.']);
+  if(corresp.length>1) av.push(['erro','Há '+corresp.length+' autores correspondentes. A maioria das revistas aceita apenas um.']);
+  E.autores.forEach(function(a){
+    var n=(a.icmje||[]).filter(Boolean).length;
+    var nome=a.nome||'Autor sem nome';
+    if(n>0&&n<4) av.push(['erro',nome+' não cumpre os quatro critérios ICMJE. Mover para os agradecimentos ou completar a participação antes da submissão.']);
+    var cr=a.credit||[];
+    if(cr.length===1 && cr[0]==='Redação, revisão e edição') av.push(['alerta',nome+' declarou apenas revisão do texto. Esse é o padrão típico de autoria honorária. Verifique se há contribuição substantiva.']);
+    if(cr.length===0 && n>0) av.push(['alerta',nome+' não tem papel CRediT declarado.']);
+    if(!a.orcid) av.push(['alerta',nome+' sem ORCID.']);
+    else if(!validaOrcid(a.orcid).ok) av.push(['erro',nome+': ORCID inválido.']);
+    if(!a.inst) av.push(['alerta',nome+' sem afiliação declarada.']);
+  });
+  var todosPapeis={};
+  E.autores.forEach(function(a){ (a.credit||[]).forEach(function(p){ todosPapeis[p]=1; }); });
+  ['Conceituação','Metodologia','Análise formal','Redação do rascunho original'].forEach(function(p){
+    if(!todosPapeis[p]) av.push(['alerta','Nenhum autor declarou o papel "'+p+'". Alguém fez esse trabalho.']);
+  });
+  var insts={};
+  E.autores.forEach(function(a){ if(a.inst) insts[a.inst.trim()]=(insts[a.inst.trim()]||0)+1; });
+  var chaves=Object.keys(insts);
+  for(var i=0;i<chaves.length;i++){
+    for(var j=i+1;j<chaves.length;j++){
+      if(normaliza(chaves[i])!==normaliza(chaves[j]) && normaliza(chaves[i]).slice(0,12)===normaliza(chaves[j]).slice(0,12)){
+        av.push(['erro','Afiliações quase idênticas e escritas de formas diferentes: "'+chaves[i]+'" e "'+chaves[j]+'". Padronize, ou a contagem institucional se fragmenta nas bases.']);
+      }
+    }
+  }
+  if(!av.length) av.push(['bom','Nenhum problema de autoria detectado.']);
+  return av.map(function(a){return '<div class="aviso '+a[0]+'">'+esc(a[1])+'</div>'}).join('');
+}
+
+function modMeta(){
+  var m=E.meta;
+  var s='<div class="painel"><h3>Metadados do manuscrito</h3><div class="sub">Preenchido uma vez, serve para todos os próximos artigos do grupo.</div><div class="grade g2">';
+  var cs=[['instituicao','Afiliação oficial, forma padronizada'],['financiamento','Agência financiadora'],['processo','Número do processo ou do termo de outorga'],['etica','Aprovação ética, número e órgão'],['licenca','Licença de coleta ou de acesso, número'],['conflito','Declaração de conflito de interesses'],['dispDados','Declaração de disponibilidade de dados'],['usoIA','Declaração de uso de inteligência artificial']];
+  cs.forEach(function(c){
+    var grande=(c[0]==='conflito'||c[0]==='dispDados'||c[0]==='usoIA');
+    s+='<label class="campo" style="'+(grande?'grid-column:1/-1':'')+'"><span>'+esc(c[1])+'</span>'+
+       (grande? '<textarea style="min-height:70px" onchange="P.setMeta(\''+c[0]+'\',this.value)">'+esc(m[c[0]]||'')+'</textarea>'
+              : '<input type="text" value="'+esc(m[c[0]]||'')+'" onchange="P.setMeta(\''+c[0]+'\',this.value)">')+
+       '</label>';
+  });
+  s+='</div>';
+  var a=AREAS[E.area];
+  if(a) s+='<div class="nota">Exigências éticas típicas da sua área: '+esc(a.etica)+'</div>';
+  s+='<div style="margin-top:12px"><button class="mini" onclick="P.blocoIdent()">Gerar bloco de identificação dos autores</button></div><div id="saidaIdent"></div>';
+  s+='</div>';
+  return s;
+}
+
+function modFiguras(){
+  var s='<div class="painel"><h3>Inventário de figuras e tabelas</h3><div class="sub">Informe a ordem em que cada item é citado no texto. A verificação de sequência é automática.</div>';
+  s+='<div class="rolagem"><table><thead><tr><th>Tipo</th><th>Nº</th><th>Título curto</th><th>Ordem de citação no texto</th><th>Resolução</th><th>Legenda fora da área</th><th>Autoexplicativa</th><th>Cor acessível</th><th></th></tr></thead><tbody>';
+  E.figuras.forEach(function(f,ix){
+    s+='<tr>';
+    s+='<td><select onchange="P.setFig('+ix+',\'tipo\',this.value)">'+['Figura','Tabela','Suplementar'].map(function(o){return '<option '+(f.tipo===o?'selected':'')+'>'+o+'</option>'}).join('')+'</select></td>';
+    s+='<td style="width:60px"><input type="number" value="'+esc(f.num||'')+'" onchange="P.setFig('+ix+',\'num\',this.value)"></td>';
+    s+='<td><input type="text" value="'+esc(f.titulo||'')+'" onchange="P.setFig('+ix+',\'titulo\',this.value)"></td>';
+    s+='<td style="width:80px"><input type="number" value="'+esc(f.ordem||'')+'" onchange="P.setFig('+ix+',\'ordem\',this.value)"></td>';
+    s+='<td style="width:110px"><select onchange="P.setFig('+ix+',\'res\',this.value)">'+['','300 dpi ou mais','Vetorial','Abaixo de 300 dpi'].map(function(o){return '<option '+(f.res===o?'selected':'')+'>'+(o||'definir')+'</option>'}).join('')+'</select></td>';
+    ['fora','auto','cor'].forEach(function(k){
+      s+='<td style="text-align:center"><input type="checkbox" '+(f[k]?'checked':'')+' onchange="P.setFig('+ix+',\''+k+'\',this.checked)"></td>';
+    });
+    s+='<td><button class="mini risco" onclick="P.delFig('+ix+')">remover</button></td>';
+    s+='</tr>';
+  });
+  s+='</tbody></table></div>';
+  s+='<button class="mini primario" style="margin-top:10px" onclick="P.addFig()">Acrescentar item</button>';
+  s+='<div class="diag" style="margin-top:12px">'+diagFiguras()+'</div>';
+  s+='<div class="nota">Regra que não se negocia: a legenda fica fora da área do gráfico. Legenda sobreposta esconde dado e se torna ilegível quando a figura é reduzida para a largura de uma coluna.</div>';
+  s+='</div>';
+  return s;
+}
+function diagFiguras(){
+  var av=[];
+  if(!E.figuras.length) return '<div class="aviso neutro">Cadastre as figuras e tabelas.</div>';
+  var figs=E.figuras.filter(function(f){return f.tipo==='Figura'});
+  var tabs=E.figuras.filter(function(f){return f.tipo==='Tabela'});
+  [['Figura',figs],['Tabela',tabs]].forEach(function(par){
+    var lista=par[1].slice().sort(function(a,b){return (parseInt(a.ordem)||99)-(parseInt(b.ordem)||99)});
+    var esperado=1, fora=false;
+    lista.forEach(function(f){ if(parseInt(f.num)!==esperado) fora=true; esperado++; });
+    if(lista.length && fora) av.push(['erro',par[0]+'s citadas fora de ordem crescente. Renumere conforme a primeira menção no texto.']);
+    else if(lista.length) av.push(['bom',par[0]+'s citadas em ordem crescente.']);
+  });
+  E.figuras.forEach(function(f){
+    var n=(f.tipo||'Item')+' '+(f.num||'?');
+    if(f.tipo!=='Tabela'){
+      if(f.res==='Abaixo de 300 dpi') av.push(['erro',n+': resolução abaixo do mínimo aceito pela maioria das revistas.']);
+      if(!f.res) av.push(['alerta',n+': resolução não definida.']);
+      if(!f.fora) av.push(['erro',n+': legenda ainda dentro da área do gráfico.']);
+      if(!f.cor) av.push(['alerta',n+': paleta não conferida para deficiência de visão de cores.']);
+    }
+    if(!f.auto) av.push(['alerta',n+': ainda não se explica sozinha fora do texto.']);
+  });
+  var total=E.figuras.filter(function(f){return f.tipo!=='Suplementar'}).length;
+  if(total>8) av.push(['alerta',total+' itens no corpo do texto. Muitas revistas limitam entre seis e oito. Considere mover parte para o material suplementar.']);
+  return av.map(function(a){return '<div class="aviso '+a[0]+'">'+esc(a[1])+'</div>'}).join('');
+}
+
+function modDados(){
+  var a=AREAS[E.area];
+  var s='<div class="painel"><h3>Depósito de dados</h3><div class="sub">Deposite antes de submeter. O identificador costuma ser pedido já no formulário.</div><div class="grade g2">';
+  s+='<label class="campo"><span>Repositório</span><input type="text" value="'+esc(E.dados.repositorio||'')+'" onchange="P.setDados(\'repositorio\',this.value)" placeholder="'+esc(a? a.repositorios.split(',')[0] : 'Zenodo')+'"></label>';
+  s+='<label class="campo"><span>DOI do conjunto de dados</span><input type="text" class="mono" value="'+esc(E.dados.doi||'')+'" onchange="P.setDados(\'doi\',this.value)" placeholder="10.5281/zenodo..."></label>';
+  s+='<label class="campo"><span>Licença dos dados</span><select onchange="P.setDados(\'licencaDados\',this.value)">'+
+     ['','CC0','CC BY 4.0','CC BY-NC 4.0','Acesso restrito mediante solicitação'].map(function(o){return '<option '+(E.dados.licencaDados===o?'selected':'')+'>'+esc(o||'definir')+'</option>'}).join('')+'</select></label>';
+  s+='<label class="campo"><span>Código ou roteiro de análise</span><input type="text" value="'+esc(E.dados.codigo||'')+'" onchange="P.setDados(\'codigo\',this.value)" placeholder="Endereço do repositório de código"></label>';
+  s+='</div>';
+  if(a) s+='<div class="nota">Repositórios usuais na sua área: '+esc(a.repositorios)+'</div>';
+  s+='</div>';
+  return s;
+}
+
+function modSubmissao(){
+  var s='<div class="painel"><h3>Carta ao editor</h3><div class="sub">Gerada a partir do que já foi preenchido. Edite antes de enviar, principalmente o parágrafo de aderência ao escopo.</div>';
+  s+='<button class="mini primario" onclick="P.carta()">Gerar carta</button> <button class="mini" onclick="P.copiar(\'saidaCarta\')">Copiar</button> <button class="mini" onclick="P.aprimorarCarta()">Revisar com serviço de linguagem</button>';
+  s+='<div id="saidaCarta" style="margin-top:12px"></div><div id="saidaCartaIA"></div></div>';
+  return s;
+}
+
+function modDifusao(){
+  var s='<div class="painel"><h3>Decisões já tomadas na estação da revista</h3><div class="sub">A difusão executa o que foi decidido antes. Não é aqui que se conserta escolha ruim de revista.</div><div class="diag">';
+  s+='<div class="aviso '+(E.revistaEscolhida?'bom':'alerta')+'">Revista: '+esc(E.revistaEscolhida||'ainda não decidida')+'</div>';
+  s+='<div class="aviso '+(E.rotaOA?'bom':'alerta')+'">Acesso aberto: '+esc(E.rotaOA||'ainda não decidido')+'</div>';
+  s+='<div class="aviso '+(E.preprint?'bom':'alerta')+'">Preprint: '+esc(E.preprint||'ainda não decidido')+'</div>';
+  s+='</div></div>';
+  s+='<div class="painel"><h3>Responsáveis e prazos</h3><div class="sub">Ação sem nome e sem data não acontece. Preencha ao lado de cada item marcado.</div>';
+  DIFUSAO.forEach(function(d){
+    var on=!!E.itens[d.id];
+    s+='<div class="item '+(on?'feito':'')+'"><input type="checkbox" id="it_'+d.id+'" '+(on?'checked':'')+' onchange="P.marcar(\''+d.id+'\',this.checked)">'+
+       '<div class="txt"><b><label for="it_'+d.id+'">'+esc(d.t)+'</label></b><small>'+esc(d.a)+'</small>'+
+       '<div class="grade g2" style="margin-top:6px"><input type="text" placeholder="Responsável" value="'+esc((E.difusao[d.id]||{}).quem||'')+'" onchange="P.setDifusao(\''+d.id+'\',\'quem\',this.value)">'+
+       '<input type="text" placeholder="Prazo" value="'+esc((E.difusao[d.id]||{}).quando||'')+'" onchange="P.setDifusao(\''+d.id+'\',\'quando\',this.value)"></div>'+
+       '</div></div>';
+  });
+  s+='<div style="margin-top:12px"><button class="mini primario" onclick="P.planoDifusao()">Gerar plano de difusão</button> <button class="mini" onclick="P.copiar(\'saidaDifusao\')">Copiar</button></div>';
+  s+='<div id="saidaDifusao"></div></div>';
+  return s;
+}
+
+function modRevisores(){
+  var s='<div class="painel"><h3>Matriz de resposta</h3><div class="sub">Um comentário por linha. Nenhum fica sem resposta, inclusive os recusados.</div>';
+  E.revisores.forEach(function(r,ix){
+    s+='<div class="cartao"><span class="ordem">Comentário '+(ix+1)+'</span>';
+    s+='<div class="fechar"><button class="mini risco" onclick="P.delRev('+ix+')">remover</button></div>';
+    s+='<div class="grade g3" style="margin-top:6px">';
+    s+='<label class="campo"><span>Revisor</span><input type="text" value="'+esc(r.rev||'')+'" onchange="P.setRev('+ix+',\'rev\',this.value)" placeholder="R1, R2, editor"></label>';
+    s+='<label class="campo"><span>Decisão</span><select onchange="P.setRev('+ix+',\'decisao\',this.value)">'+
+       ['','Aceito integralmente','Aceito em parte','Recusado com justificativa'].map(function(o){return '<option '+(r.decisao===o?'selected':'')+'>'+esc(o||'definir')+'</option>'}).join('')+'</select></label>';
+    s+='<label class="campo"><span>Onde mudou</span><input type="text" value="'+esc(r.onde||'')+'" onchange="P.setRev('+ix+',\'onde\',this.value)" placeholder="Página e linha"></label>';
+    s+='</div>';
+    s+='<label class="campo"><span>Comentário recebido</span><textarea style="min-height:60px" onchange="P.setRev('+ix+',\'texto\',this.value)">'+esc(r.texto||'')+'</textarea></label>';
+    s+='<label class="campo"><span>Resposta</span><textarea style="min-height:70px" onchange="P.setRev('+ix+',\'resposta\',this.value)">'+esc(r.resposta||'')+'</textarea></label>';
+    s+='</div>';
+  });
+  s+='<button class="mini primario" onclick="P.addRev()">Acrescentar comentário</button>';
+  s+='<div class="diag" style="margin-top:12px">'+diagRevisores()+'</div>';
+  s+='<div style="margin-top:12px"><button class="mini" onclick="P.cartaRevisores()">Gerar carta de resposta</button> <button class="mini" onclick="P.copiar(\'saidaRev\')">Copiar</button></div><div id="saidaRev"></div>';
+  s+='</div>';
+  return s;
+}
+function diagRevisores(){
+  var av=[];
+  if(!E.revisores.length) return '<div class="aviso neutro">Sem comentários cadastrados.</div>';
+  var sem=E.revisores.filter(function(r){return !(r.resposta||'').trim()});
+  if(sem.length) av.push(['erro',sem.length+' comentário(s) ainda sem resposta.']);
+  var rec=E.revisores.filter(function(r){return r.decisao==='Recusado com justificativa'});
+  rec.forEach(function(r,i){ if((r.resposta||'').length<120) av.push(['alerta','Uma recusa com resposta curta tende a gerar segunda rodada. Fundamente com evidência, não com preferência.']); });
+  var semOnde=E.revisores.filter(function(r){return r.decisao&&r.decisao!=='Recusado com justificativa'&&!(r.onde||'').trim()});
+  if(semOnde.length) av.push(['alerta',semOnde.length+' alteração(ões) aceitas sem indicação de onde o texto mudou.']);
+  if(!av.length) av.push(['bom','Matriz completa.']);
+  return av.map(function(a){return '<div class="aviso '+a[0]+'">'+esc(a[1])+'</div>'}).join('');
+}
+
+
+/* ================= diagramas de estrutura ================= */
+var COR={azul:'#1B4DD1',rosa:'#E6187C',laranja:'#FF6A13',linha:'#DDE3F2',suave:'#F2F6FF',cinza:'#5A6480',tinta:'#15224A'};
+
+function quebrar(t,max){
+  var ps=String(t).split(' '), l=[], atual='';
+  ps.forEach(function(p){
+    if((atual+' '+p).trim().length>max){ l.push(atual.trim()); atual=p; } else { atual+=' '+p; }
+  });
+  if(atual.trim()) l.push(atual.trim());
+  return l;
+}
+function textoSVG(x,y,t,max,tam,cor,peso,anchor){
+  var l=quebrar(t,max), s='';
+  l.forEach(function(linha,i){
+    s+='<text x="'+x+'" y="'+(y+i*(tam+3))+'" text-anchor="'+(anchor||'start')+'" font-size="'+tam+'" fill="'+cor+'" font-weight="'+(peso||'400')+'" font-family="-apple-system,Segoe UI,Roboto,sans-serif">'+esc(linha)+'</text>';
+  });
+  return s;
+}
+function svgAmpulheta(){
+  var s='<svg viewBox="0 0 780 250" style="width:100%;height:auto">';
+  s+='<rect width="780" height="250" fill="#ffffff"/>';
+  var blocos=[
+    {t:'Introdução',sub:'do amplo ao específico',y:14,h:56,w1:470,w2:200,cor:COR.azul},
+    {t:'Método e resultado',sub:'a parte mais estreita e mais precisa',y:82,h:56,w1:200,w2:200,cor:COR.rosa},
+    {t:'Discussão e conclusão',sub:'do específico de volta ao amplo',y:150,h:56,w1:200,w2:470,cor:COR.laranja}
+  ];
+  blocos.forEach(function(b){
+    var cx=250;
+    var pts=[[cx-b.w1/2,b.y],[cx+b.w1/2,b.y],[cx+b.w2/2,b.y+b.h],[cx-b.w2/2,b.y+b.h]];
+    s+='<polygon points="'+pts.map(function(p){return p[0]+','+p[1]}).join(' ')+'" fill="'+b.cor+'" opacity="0.12" stroke="'+b.cor+'" stroke-width="1.4"/>';
+    s+=textoSVG(cx,b.y+b.h/2+1,b.t,30,14,COR.tinta,'700','middle');
+    s+=textoSVG(cx,b.y+b.h/2+18,b.sub,44,11,COR.cinza,'400','middle');
+  });
+  s+='<line x1="530" y1="20" x2="530" y2="200" stroke="'+COR.linha+'" stroke-width="1"/>';
+  s+=textoSVG(548,32,'A pergunta de cada seção',34,12.5,COR.tinta,'700');
+  var perg=[['Introdução','Por que este problema merece um estudo, e o que ainda não se sabe'],
+            ['Método','Como isso foi feito, com detalhe suficiente para alguém repetir'],
+            ['Resultado','O que foi encontrado, sem interpretar'],
+            ['Discussão','O que isso significa, e por que difere ou concorda com o que já existe'],
+            ['Conclusão','Qual é a resposta e até onde ela vale']];
+  var y=56;
+  perg.forEach(function(p){
+    s+='<circle cx="554" cy="'+(y-4)+'" r="3" fill="'+COR.rosa+'"/>';
+    s+=textoSVG(564,y,p[0],30,11.8,COR.azul,'700');
+    var l=quebrar(p[1],31);
+    s+=textoSVG(564,y+13,p[1],31,10.8,COR.cinza,'400');
+    y+=15+l.length*13;
+  });
+  s+='</svg>';
+  return s;
+}
+function svgFunil(bandas,invertido){
+  var n=bandas.length, alt=52, H=n*alt+30, cx=175;
+  var maior=300, menor=120;
+  var s='<svg viewBox="0 0 780 '+H+'" style="width:100%;height:auto"><rect width="780" height="'+H+'" fill="#ffffff"/>';
+  var cores=[COR.azul,COR.rosa,COR.laranja];
+  for(var i=0;i<n;i++){
+    var f1=i/n, f2=(i+1)/n;
+    var w1= invertido? menor+(maior-menor)*f1 : maior-(maior-menor)*f1;
+    var w2= invertido? menor+(maior-menor)*f2 : maior-(maior-menor)*f2;
+    var y=14+i*alt, cor=cores[i%3];
+    s+='<polygon points="'+(cx-w1/2)+','+y+' '+(cx+w1/2)+','+y+' '+(cx+w2/2)+','+(y+alt-8)+' '+(cx-w2/2)+','+(y+alt-8)+'" fill="'+cor+'" opacity="0.13" stroke="'+cor+'" stroke-width="1.3"/>';
+    s+=textoSVG(cx,y+alt/2-2,bandas[i][0],26,12.5,COR.tinta,'700','middle');
+    s+='<line x1="'+(cx+w1/2+6)+'" y1="'+(y+alt/2-4)+'" x2="360" y2="'+(y+alt/2-4)+'" stroke="'+COR.linha+'" stroke-width="1"/>';
+    s+='<circle cx="366" cy="'+(y+alt/2-4)+'" r="3.4" fill="'+cor+'"/>';
+    s+=textoSVG(378,y+16,bandas[i][1],58,11,COR.cinza,'400');
+  }
+  s+='</svg>';
+  return s;
+}
+function svgFluxo(passos){
+  var porLinha=3, linhas=Math.ceil(passos.length/porLinha), H=linhas*140+16;
+  var s='<svg viewBox="0 0 780 '+H+'" style="width:100%;height:auto"><rect width="780" height="'+H+'" fill="#ffffff"/>';
+  var cores=[COR.azul,COR.rosa,COR.laranja];
+  passos.forEach(function(p,i){
+    var lin=Math.floor(i/porLinha), col=i%porLinha;
+    var invertida=(lin%2===1);
+    var cx=invertida? (porLinha-1-col) : col;
+    var x=20+cx*250, y=14+lin*140, cor=cores[i%3];
+    s+='<rect x="'+x+'" y="'+y+'" width="222" height="114" rx="3" fill="#ffffff" stroke="'+cor+'" stroke-width="1.4"/>';
+    s+='<rect x="'+x+'" y="'+y+'" width="222" height="4" fill="'+cor+'"/>';
+    s+='<text x="'+(x+12)+'" y="'+(y+24)+'" font-size="10.5" fill="'+cor+'" font-weight="700" font-family="Georgia,serif" letter-spacing="1">PASSO '+(i+1)+'</text>';
+    s+=textoSVG(x+12,y+41,p[0],28,12.5,COR.tinta,'700');
+    s+=textoSVG(x+12,y+58,p[1],29,10.8,COR.cinza,'400');
+    var prox=i+1;
+    if(prox<passos.length){
+      var mesmaLinha=(Math.floor(prox/porLinha)===lin);
+      if(mesmaLinha){
+        var xs=invertida? x-8 : x+230, xe=invertida? x-22 : x+244;
+        s+='<path d="M '+xs+' '+(y+57)+' L '+xe+' '+(y+57)+'" stroke="'+COR.linha+'" stroke-width="2"/>';
+        s+='<path d="M '+xe+' '+(y+57)+' l '+(invertida?6:-6)+' -4 l 0 8 Z" fill="'+COR.cinza+'"/>';
+      } else {
+        s+='<path d="M '+(x+111)+' '+(y+122)+' L '+(x+111)+' '+(y+136)+'" stroke="'+COR.linha+'" stroke-width="2"/>';
+        s+='<path d="M '+(x+111)+' '+(y+138)+' l -4 -6 l 8 0 Z" fill="'+COR.cinza+'"/>';
+      }
+    }
+  });
+  s+='</svg>';
+  return s;
+}
+function svgColunas(colunas){
+  var n=colunas.length, larg=(780-20-(n-1)*14)/n, H=214;
+  var s='<svg viewBox="0 0 780 '+H+'" style="width:100%;height:auto"><rect width="780" height="'+H+'" fill="#ffffff"/>';
+  var cores=[COR.azul,COR.rosa,COR.laranja];
+  colunas.forEach(function(c,i){
+    var x=10+i*(larg+14), cor=cores[i%3];
+    s+='<rect x="'+x+'" y="14" width="'+larg+'" height="186" rx="3" fill="#ffffff" stroke="'+cor+'" stroke-width="1.4"/>';
+    s+='<rect x="'+x+'" y="14" width="'+larg+'" height="4" fill="'+cor+'"/>';
+    s+=textoSVG(x+12,44,c[0],26,13,COR.tinta,'700');
+    s+=textoSVG(x+12,66,c[1],30,11,COR.cinza,'400');
+  });
+  s+='</svg>';
+  return s;
+}
+
+var SECOES=[
+ {id:'intro',nome:'Introdução',pergunta:'Por que este problema merece um estudo e o que ainda não se sabe.',
+  fig:function(){ return svgFunil([
+    ['Campo amplo','Duas ou três frases situando o problema em escala reconhecível por qualquer leitor da revista. Nada de história da disciplina.'],
+    ['O que já se sabe','Estado da arte com literatura representativa e recente. É aqui que o leitor mede se você domina a área.'],
+    ['A lacuna','Uma frase explícita dizendo o que falta e por que essa ausência atrapalha. Se o leitor precisa deduzir, não está escrita.'],
+    ['Objetivo ou hipótese','Fecha a introdução respondendo diretamente à lacuna, com o mesmo vocabulário usado nela.']
+  ],false); }},
+ {id:'metodo',nome:'Metodologia',pergunta:'Como isso foi feito, com detalhe suficiente para alguém repetir.',
+  fig:function(){ return svgFluxo([
+    ['Área de estudo','Coordenadas, datum, período e por que estes locais e não outros.'],
+    ['Desenho amostral','Unidade amostral, número de réplicas, critério de seleção e frequência.'],
+    ['Coleta em campo','Procedimento, preservação das amostras e cadeia de custódia.'],
+    ['Análise laboratorial','Equipamento com modelo e fabricante, limite de detecção, controle de qualidade.'],
+    ['Tratamento dos dados','Filtros, transformações, tratamento de falha e de valor extremo, tudo declarado.'],
+    ['Análise estatística','Teste, pressupostos verificados, nível de significância, programa e versão.']
+  ]); }},
+ {id:'result',nome:'Resultados',pergunta:'O que foi encontrado, sem interpretar.',
+  fig:function(){ return svgColunas([
+    ['O que entra','Achado com magnitude, variação e tamanho amostral. Ordem igual à dos objetivos. Resultado contrário à hipótese também entra.'],
+    ['Como entra','Texto destaca o padrão, figura ou tabela carrega o dado. Nunca os dois repetindo a mesma informação.'],
+    ['O que não entra','Interpretação, comparação com literatura, especulação sobre mecanismo e justificativa de método.']
+  ]); }},
+ {id:'discus',nome:'Discussão',pergunta:'O que isso significa e por que difere ou concorda com o que já existe.',
+  fig:function(){ return svgFunil([
+    ['Resposta ao objetivo','Primeiro parágrafo, achado principal em uma frase. Sem reabrir revisão de literatura.'],
+    ['Confronto com a literatura','Onde concorda, onde discorda, e por que discorda. Discordância inexplicada enfraquece o artigo.'],
+    ['Mecanismo ou explicação','Separando o que é evidência do que é inferência, com verbos que marcam essa diferença.'],
+    ['Implicação e alcance','Para a área, para o manejo ou para política pública. É o parágrafo que faz o artigo circular fora do nicho.']
+  ],true); }},
+ {id:'limit',nome:'Limitações',pergunta:'Até onde a inferência vale e o que a restringe.',
+  fig:function(){ return svgColunas([
+    ['O que limita','Escala temporal curta, cobertura espacial parcial, número de réplicas, método indireto, ausência de controle.'],
+    ['Qual inferência isso restringe','Cada limitação precisa dizer o que deixa de poder ser afirmado. Lista genérica não vale nada.'],
+    ['O que foi feito para reduzir','Validação cruzada, dado independente, análise de sensibilidade, teste com subconjunto.']
+  ]); }},
+ {id:'concl',nome:'Conclusão',pergunta:'Qual é a resposta e até onde ela vale.',
+  fig:function(){ return svgColunas([
+    ['A resposta','Uma ou duas frases respondendo à pergunta da introdução, sem repetir o resumo.'],
+    ['O alcance','Em que condições o achado vale, e a partir de onde deixa de valer.'],
+    ['A próxima pergunta','O que o trabalho abriu. É o convite para o leitor citar e continuar.']
+  ]); }}
+];
+var SEC_ATUAL='intro';
+
+function htmlAbasSec(){
+  var porto=ESTACOES.filter(function(e){return e.mod==='corpo'})[0];
+  return SECOES.map(function(sec){
+    var lista=porto.itens.filter(function(it){return it.sec===sec.id});
+    var feitos=lista.filter(function(it){return E.itens[it.id]}).length;
+    return '<button class="'+(SEC_ATUAL===sec.id?'on':'')+'" onclick="P.secao(\''+sec.id+'\')">'+esc(sec.nome)+' <small>'+feitos+'/'+lista.length+'</small></button>';
+  }).join('');
+}
+function atualizarAbasSec(){ var a=el('abasSec'); if(a) a.innerHTML=htmlAbasSec(); }
+function modCorpo(){
+  var s='<div class="painel"><h3>A ampulheta do artigo</h3><div class="sub">A forma geral que quase toda revista indexada espera, independentemente da área.</div>'+svgAmpulheta()+'</div>';
+  s+='<div class="abas-sec" id="abasSec">'+htmlAbasSec()+'</div>';
+  var sec=SECOES.filter(function(x){return x.id===SEC_ATUAL})[0];
+  s+='<div class="painel" style="border-left-color:'+(SEC_ATUAL==='metodo'?COR.rosa:COR.azul)+'"><h3>'+esc(sec.nome)+'</h3>'+
+     '<div class="sub">'+esc(sec.pergunta)+'</div>'+sec.fig()+'</div>';
+  var lista=ESTACOES[atual].itens.filter(function(it){return it.sec===SEC_ATUAL});
+  s+='<div class="painel"><h3>Verificações de '+esc(sec.nome.toLowerCase())+'</h3><div class="sub">Marque apenas o que estiver de fato resolvido no texto.</div>';
+  lista.forEach(function(it){
+    var on=!!E.itens[it.id];
+    s+='<div class="item '+(on?'feito':'')+'"><input type="checkbox" id="it_'+it.id+'" '+(on?'checked':'')+' onchange="P.marcar(\''+it.id+'\',this.checked)">'+
+       '<div class="txt"><b><label for="it_'+it.id+'">'+esc(it.t)+'</label></b><small>'+esc(it.a||'')+'</small></div>'+
+       (it.w==='critico'?'<span class="tag critico">crítico</span>':'<span class="tag padrao">padrão</span>')+'</div>';
+  });
+  s+='</div>';
+  s+='<div class="painel" style="border-left-color:'+COR.laranja+'"><h3>Anotações de '+esc(sec.nome.toLowerCase())+'</h3>'+
+     '<div class="sub">Rascunhe aqui a frase da lacuna, o objetivo, o parágrafo de abertura da discussão, o que precisar.</div>'+
+     '<textarea onchange="P.nota(\'sec_'+SEC_ATUAL+'\',this.value)" placeholder="Escreva aqui">'+esc(E.notas['sec_'+SEC_ATUAL]||'')+'</textarea></div>';
+  return s;
+}
+
+
+function modGrafico(){
+  var s='<div class="painel"><h3>Composição de um resumo gráfico</h3><div class="sub">Três faixas de leitura, da esquerda para a direita. Quem olha por cinco segundos precisa sair sabendo o achado.</div>'+
+    svgColunas([
+      ['1. Contexto mínimo','Onde e em quê. Um ícone de local, organismo ou sistema. Sem mapa detalhado e sem série histórica.'],
+      ['2. O que foi feito','Uma seta ou um par de estados comparados. É a parte que mais tenta virar fluxograma, e não deve.'],
+      ['3. O achado','O número principal, grande, com unidade. Se o leitor lembrar de uma coisa só, é deste bloco.']
+    ])+'</div>';
+  s+='<div class="painel" style="border-left-color:#E6187C"><h3>Roteiro do vídeo resumo</h3><div class="sub">Quatro blocos de cerca de quarenta segundos. Comece pelo achado, nunca pela revisão de literatura.</div>'+
+    svgFluxo([
+      ['Problema','Uma frase sobre por que alguém deveria se importar. Sem citação e sem histórico.'],
+      ['O que fizemos','Onde, quando e como, em linguagem de conversa. Mostre imagem de campo ou de laboratório.'],
+      ['O que achamos','O número principal na tela, falado devagar, com a unidade dita por extenso.'],
+      ['Por que importa','A implicação e a próxima pergunta. Encerre com o identificador do artigo na tela.']
+    ])+'</div>';
+  s+='<div class="painel" style="border-left-color:#FF6A13"><h3>Onde consultar</h3><div class="sub">Abrem em nova aba. Confira sempre a exigência de dimensão e formato da revista escolhida.</div><div class="mapa">'+
+    [['Cell Press, guia de resumo gráfico','https://www.cell.com/pb/assets/raw/shared/figureguidelines/GA_guide.pdf','Composição, tamanho de fonte e os erros mais comuns.'],
+     ['Nature Video','https://www.youtube.com/@NatureVideo','Exemplos de narrativa audiovisual curta sobre um achado.'],
+     ['ColorBrewer','https://colorbrewer2.org/','Paletas seguras para daltonismo e para impressão.'],
+     ['Inkscape','https://inkscape.org/','Editor vetorial livre, exporta em alta resolução.'],
+     ['BioRender','https://www.biorender.com/','Ícones e esquemas de ciências da vida.']
+    ].map(function(x){return '<a href="'+x[1]+'" target="_blank" rel="noopener noreferrer"><b>'+esc(x[0])+'</b><small>'+esc(x[2])+'</small></a>'}).join('')+
+    '</div><div class="nota">O endereço específico de páginas de editora muda com frequência. Se um link cair, procure pelo nome indicado dentro do site da editora.</div></div>';
+  return s;
+}
+
+/* ================= biblioteca ================= */
+var BIBLIOTECA=[
+ {g:'Modelos e inspiração',d:'Leia artigos inteiros de revistas de referência antes de escrever. É o exercício que mais rende, e nenhum manual substitui.',l:[
+   ['Nature, artigos','https://www.nature.com/nature/articles','Observe a estrutura do primeiro parágrafo e o tamanho das seções.'],
+   ['Nature, guia para autores','https://www.nature.com/nature/for-authors','Guia de formatação, limites e política editorial.'],
+   ['Science, informação para autores','https://www.science.org/content/page/science-information-authors','Regras de submissão e de estrutura.'],
+   ['Science, revista','https://www.science.org/journal/science','Leia a seção de pesquisa da sua área.'],
+   ['SciELO','https://www.scielo.org','Modelos em português e espanhol, com padrão latino-americano de escrita.'],
+   ['PLOS ONE','https://journals.plos.org/plosone/','Métodos costumam ser mais detalhados, bom modelo de reprodutibilidade.']
+ ]},
+ {g:'Autoria, ética e transparência',d:'O que sustenta a decisão de quem assina e como declarar o que foi feito.',l:[
+   ['ICMJE, recomendações','https://www.icmje.org/recommendations/','Origem dos quatro critérios de autoria usados no porto 7.'],
+   ['CRediT, taxonomia','https://credit.niso.org/','Os catorze papéis de contribuição, com definição oficial de cada um.'],
+   ['COPE','https://publicationethics.org/','Fluxogramas para conflito de autoria, plágio e má conduta.'],
+   ['ORCID','https://orcid.org/','Identificador permanente do pesquisador.'],
+   ['Plataforma Lattes','https://lattes.cnpq.br/','Currículo obrigatório na avaliação dos programas brasileiros.']
+ ]},
+ {g:'Diretrizes de relato',d:'A maioria das revistas exige a lista de checagem preenchida no ato da submissão.',l:[
+   ['EQUATOR Network','https://www.equator-network.org/','Catálogo com todas as diretrizes por tipo de estudo.'],
+   ['PRISMA','https://www.prisma-statement.org/','Revisão sistemática e metanálise.'],
+   ['CONSORT','https://www.consort-statement.org/','Ensaio clínico randomizado.'],
+   ['STROBE','https://www.strobe-statement.org/','Estudo observacional.'],
+   ['ARRIVE','https://arriveguidelines.org/','Pesquisa com animais.']
+ ]},
+ {g:'Escolha da revista',d:'Antes de decidir, confira indexação, política de acesso aberto e permissão de depósito.',l:[
+   ['DOAJ','https://doaj.org/','Diretório de revistas de acesso aberto com critérios de qualidade.'],
+   ['Sherpa Romeo','https://v2.sherpa.ac.uk/romeo/','Diz o que cada revista permite depositar em repositório e quando.'],
+   ['Master Journal List','https://mjl.clarivate.com/','Cobertura na Web of Science.'],
+   ['Scopus, fontes','https://www.scopus.com/sources','Cobertura e métricas de fonte.'],
+   ['Plataforma Sucupira','https://sucupira.capes.gov.br/','Consulta ao Qualis do seu programa.'],
+   ['Think Check Submit','https://thinkchecksubmit.org/','Roteiro para não cair em revista predatória.']
+ ]},
+ {g:'Dados, código e preprint',d:'Depositar antes de submeter transforma exigência editorial em rotina resolvida.',l:[
+   ['Zenodo','https://zenodo.org/','Repositório geral com identificador permanente, aceita dados e código.'],
+   ['Dryad','https://datadryad.org/','Dados associados a publicação.'],
+   ['Open Science Framework','https://osf.io/','Projeto, dados, materiais e registro de protocolo.'],
+   ['SciELO Preprints','https://preprints.scielo.org/','Servidor de preprints em português.'],
+   ['bioRxiv','https://www.biorxiv.org/','Preprints em ciências biológicas.'],
+   ['EarthArXiv','https://eartharxiv.org/','Preprints em ciências da terra e ambientais.']
+ ]},
+ {g:'Vocabulário controlado',d:'De onde tirar descritores que não repetem o título.',l:[
+   ['AGROVOC','https://agrovoc.fao.org/browse/agrovoc/','Agrárias, ambientais e alimentação, multilíngue.'],
+   ['MeSH','https://meshb.nlm.nih.gov/','Descritores da área da saúde usados pelo PubMed.'],
+   ['DeCS','https://decs.bvsalud.org/','Versão trilíngue do MeSH, com termos em português.'],
+   ['GEMET','https://www.eionet.europa.eu/gemet/','Tesauro ambiental europeu.'],
+   ['UNESCO Thesaurus','https://vocabularies.unesco.org/browser/thesaurus/','Amplo, útil para humanas e educação.']
+ ]},
+ {g:'Resumo gráfico e vídeo resumo',d:'Peças de circulação. Confira sempre a exigência de dimensão e formato da revista escolhida.',l:[
+   ['Cell Press, guia de resumo gráfico','https://www.cell.com/pb/assets/raw/shared/figureguidelines/GA_guide.pdf','Referência mais citada sobre composição e erros comuns.'],
+   ['Elsevier, autores','https://www.elsevier.com/researcher/author','Procure por graphical abstract. O endereço específico muda com frequência.'],
+   ['Nature Video','https://www.youtube.com/@NatureVideo','Exemplos de narrativa audiovisual curta sobre um achado.'],
+   ['Inkscape','https://inkscape.org/','Editor vetorial livre, exporta em alta resolução para resumo gráfico.'],
+   ['BioRender','https://www.biorender.com/','Figuras esquemáticas de ciências da vida, versão gratuita limitada.'],
+   ['ColorBrewer','https://colorbrewer2.org/','Paletas seguras para daltonismo, com opção para impressão.']
+ ]}
+];
+function desenhaBiblioteca(){
+  var s='<div class="sobre"><div class="eyebrow">Consulta</div><h2>Biblioteca de apoio</h2>';
+  s+='<p class="lide">Endereços externos úteis durante a construção do artigo, organizados pela etapa em que costumam ser necessários. Abrem em nova aba.</p>';
+  s+='<p>Sites de editora mudam de endereço com frequência. Se um link cair, procure pelo nome indicado dentro do site da editora, porque o conteúdo continua existindo com outro caminho.</p>';
+  BIBLIOTECA.forEach(function(g){
+    s+='<h3 style="font-family:Georgia,serif;font-size:18px;margin-top:22px">'+esc(g.g)+'</h3>';
+    s+='<p style="margin-bottom:6px">'+esc(g.d)+'</p><div class="mapa">';
+    g.l.forEach(function(x){
+      s+='<a href="'+esc(x[1])+'" target="_blank" rel="noopener noreferrer"><b>'+esc(x[0])+'</b><small>'+esc(x[2])+'</small></a>';
+    });
+    s+='</div>';
+  });
+  s+='<div class="assinatura"><b>Antes de usar qualquer modelo</b><p>Nenhum guia substitui a leitura de três artigos recentes da revista para a qual você vai submeter. É lá que estão a extensão real das seções, o tom aceito e o nível de detalhe esperado no método.</p></div>';
+  s+='</div>';
+  el('estacao').innerHTML=s;
+}
+
+/* ---------- desenho da estação ---------- */
+function desenhaEstacao(){
+  if(atual===-2){ desenhaBiblioteca(); return; }
+  if(atual<0){ desenhaSobre(); return; }
+  var i=atual, es=ESTACOES[i], p=progEstacao(i);
+  var s='<div class="capa"><div class="num">'+(i+1)+'</div><div class="txt">'+
+    '<div class="eyebrow">Porto '+(i+1)+' de '+ESTACOES.length+' &nbsp;·&nbsp; '+p.feitos+' de '+p.total+' resolvidos</div>'+
+    '<h2>'+esc(es.nome)+'</h2>'+
+    '<div class="medidor"><i style="width:'+Math.round(p.pct*100)+'%"></i></div>'+
+    '</div></div>';
+  s+='<p class="chamada">'+esc(es.frase)+'</p>';
+  if(es.mod==='rota') s+=modRota();
+  if(es.mod==='revista') s+=modRevista();
+  if(es.mod==='titulo') s+=modTitulo();
+  if(es.mod==='resumo') s+=modResumo();
+  if(es.mod==='chaves') s+=modChaves();
+  if(es.mod==='autoria') s+=modAutoria();
+  if(es.mod==='meta') s+=modMeta();
+  if(es.mod==='figuras') s+=modFiguras();
+  if(es.mod==='dados') s+=modDados();
+  if(es.mod==='submissao') s+=modSubmissao();
+  if(es.mod==='difusao') s+=modDifusao();
+  if(es.mod==='revisores') s+=modRevisores();
+  if(es.mod==='corpo') s+=modCorpo();
+  if(es.mod==='grafico') s+=modGrafico();
+  if(es.mod!=='difusao' && es.mod!=='corpo') s+=htmlItens(i);
+  s+=htmlNota(i);
+  s+='<div style="display:flex;gap:8px;margin-top:18px;flex-wrap:wrap">';
+  if(i>0) s+='<button onclick="P.ir('+(i-1)+')">Estação anterior</button>';
+  if(i<ESTACOES.length-1) s+='<button class="primario" onclick="P.ir('+(i+1)+')">Próxima estação</button>';
+  s+='</div>';
+  el('estacao').innerHTML=s;
+  if(es.mod==='resumo') el('diagResumo').innerHTML=diagResumo();
+  if(es.mod==='submissao') P.carta();
+}
+
+function render(){
+  if(!MAR_PRONTO) montarMar();
+  atualizarMar(); desenhaRumos(); desenhaEstacao(); rolarAoPorto();
+}
+function rolarAoPorto(){
+  var c=el('carta'); if(!c) return;
+  var svg=c.querySelector('svg'); if(!svg) return;
+  var largura=svg.getBoundingClientRect? svg.getBoundingClientRect().width : 0;
+  if(!largura || c.scrollWidth<=c.clientWidth+4) return;
+  var alvo=(PORTOS[Math.max(atual,0)]/840)*svg.scrollWidth - c.clientWidth/2;
+  try{ c.scrollTo({left:Math.max(alvo,0),behavior:'smooth'}); }catch(e){ c.scrollLeft=Math.max(alvo,0); }
+}
+
+/* ---------- gerador de textos ---------- */
+function baixar(nome,txt,tipo){
+  try{
+    var b=new Blob([txt],{type:tipo||'text/plain;charset=utf-8'});
+    var u=URL.createObjectURL(b), a=document.createElement('a');
+    a.href=u; a.download=nome; a.style.display='none';
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ try{URL.revokeObjectURL(u);}catch(e){} a.remove(); },600);
+    return true;
+  }catch(e){ return false; }
+}
+
+
+/* ---------- janela de texto ---------- */
+function fecharTela(){ var t=el('tela'); if(t) t.remove(); }
+function abrirTela(titulo,sub,corpo){
+  fecharTela();
+  var d=document.createElement('div');
+  d.className='tela'; d.id='tela';
+  d.onclick=function(ev){ if(ev.target===d) fecharTela(); };
+  d.innerHTML='<div class="caixa"><h3>'+esc(titulo)+'</h3><div class="sub">'+esc(sub)+'</div>'+corpo+
+    '<div style="margin-top:16px;text-align:right"><button onclick="P.fecharTela()">Fechar</button></div></div>';
+  document.body.appendChild(d);
+}
+
+/* ---------- serviço de linguagem ---------- */
+function temIA(){ return true; }
+async function chamarIA(prompt){
+  var alvo = (E.iaUrl||'').trim() || 'https://api.anthropic.com/v1/messages';
+  var r = await fetch(alvo,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+  });
+  if(!r.ok) throw new Error('O serviço respondeu com erro '+r.status+'.');
+  var data = await r.json();
+  var txt=(data.content||[]).filter(function(b){return b.type==='text'}).map(function(b){return b.text}).join('\n');
+  if(!txt) throw new Error('Resposta vazia.');
+  return txt;
+}
+
+/* ---------- API pública ---------- */
+var P={
+  ir:function(i){ atual=i; render(); window.scrollTo({top:0,behavior:'smooth'}); },
+  set:function(k,v){ E[k]=v; salvar(); render(); },
+  setT:function(k,v){ E.trabalho[k]=v; salvar(); },
+  marcar:function(id,v){ if(v) E.itens[id]=1; else delete E.itens[id]; salvar(); desenhaCarta(); desenhaRumos(); var e=el('it_'+id); if(e&&e.closest('.item')) e.closest('.item').classList.toggle('feito',!!v); atualizarAbasSec(); },
+  nota:function(i,v){ E.notas[(typeof i==='number')?('n'+i):i]=v; salvar(); },
+  titulo:function(v){ E.trabalho.titulo=v; salvar(); el('diagTitulo').innerHTML=diagTitulo(); desenhaCarta(); },
+  resumo:function(v){ E.trabalho.resumo=v; salvar(); el('diagResumo').innerHTML=diagResumo(); desenhaCarta(); },
+  atualizaResumo:function(){ if(el('diagResumo')) el('diagResumo').innerHTML=diagResumo(); },
+
+  addRevista:function(){ if(E.revistas.length>=3) return; E.revistas.push({}); salvar(); render(); },
+  delRevista:function(i){ E.revistas.splice(i,1); salvar(); render(); },
+  setRevista:function(i,k,v){ E.revistas[i][k]=v; salvar(); el('diagRevista').innerHTML=diagRevista(); desenhaCarta(); },
+
+  toggleChave:function(t){ var i=E.chaves.indexOf(t); if(i>=0) E.chaves.splice(i,1); else { if(E.chaves.length>=8) return; E.chaves.push(t); } salvar(); render(); },
+  addChave:function(v){ v=(v||'').trim(); if(!v) return; if(E.chaves.indexOf(v)<0) E.chaves.push(v); salvar(); render(); },
+
+  addAutor:function(){ E.autores.push({nome:'',inst:'',email:'',orcid:'',lattes:'',icmje:[false,false,false,false],credit:[],correspondente:false}); salvar(); render(); },
+  delAutor:function(i){ E.autores.splice(i,1); salvar(); render(); },
+  moveAutor:function(i,d){ var j=i+d; if(j<0||j>=E.autores.length) return; var t=E.autores[i]; E.autores[i]=E.autores[j]; E.autores[j]=t; salvar(); render(); },
+  setAutor:function(i,k,v){ E.autores[i][k]=v; salvar(); render(); },
+  setOrcid:function(i,v){ E.autores[i].orcid=formataOrcid(v); salvar(); render(); },
+  setCorresp:function(i,v){ if(v==='sim'){ E.autores.forEach(function(a){ a.correspondente=false; }); E.autores[i].correspondente=true; } else { E.autores[i].correspondente=false; } salvar(); render(); },
+  setIcmje:function(i,c,v){ if(!E.autores[i].icmje) E.autores[i].icmje=[false,false,false,false]; E.autores[i].icmje[c]=v; salvar(); render(); },
+  setCredit:function(i,p,v){ var a=E.autores[i]; a.credit=a.credit||[]; var ix=a.credit.indexOf(p); if(v&&ix<0)a.credit.push(p); if(!v&&ix>=0)a.credit.splice(ix,1); salvar(); render(); },
+
+  setMeta:function(k,v){ E.meta[k]=v; salvar(); desenhaCarta(); },
+  setDados:function(k,v){ E.dados[k]=v; salvar(); desenhaCarta(); },
+  setDifusao:function(id,k,v){ E.difusao[id]=E.difusao[id]||{}; E.difusao[id][k]=v; salvar(); },
+
+  addFig:function(){ E.figuras.push({tipo:'Figura',num:E.figuras.length+1,titulo:'',ordem:E.figuras.length+1,res:'',fora:false,auto:false,cor:false}); salvar(); render(); },
+  delFig:function(i){ E.figuras.splice(i,1); salvar(); render(); },
+  setFig:function(i,k,v){ E.figuras[i][k]=v; salvar(); render(); },
+
+  addRev:function(){ E.revisores.push({rev:'',decisao:'',onde:'',texto:'',resposta:''}); salvar(); render(); },
+  delRev:function(i){ E.revisores.splice(i,1); salvar(); render(); },
+  setRev:function(i,k,v){ E.revisores[i][k]=v; salvar(); render(); },
+
+  textoCredit:function(){
+    var linhas=E.autores.filter(function(a){return a.nome}).map(function(a){
+      return a.nome+': '+((a.credit||[]).join('; ')||'papéis não declarados')+'.';
+    });
+    var t=linhas.length? ('Contribuição dos autores (taxonomia CRediT)\n\n'+linhas.join('\n')) : 'Cadastre os autores e marque os papéis.';
+    el('saidaCredit').innerHTML='<div class="saida" style="margin-top:10px">'+esc(t)+'</div><div style="margin-top:8px"><button class="mini" onclick="P.copiarTexto('+JSON.stringify(JSON.stringify(t))+')">Copiar</button></div>';
+  },
+  blocoIdent:function(){
+    var t='';
+    E.autores.forEach(function(a,i){
+      t+=(i+1)+'. '+(a.nome||'[nome]')+'\n';
+      t+='   Afiliação: '+(a.inst||E.meta.instituicao||'[afiliação]')+'\n';
+      t+='   E-mail: '+(a.email||'[e-mail]')+'\n';
+      t+='   ORCID: '+(a.orcid||'[ORCID]')+'\n';
+      if(a.lattes) t+='   Lattes: http://lattes.cnpq.br/'+a.lattes.replace(/\D/g,'')+'\n';
+      if(a.correspondente) t+='   Autor correspondente\n';
+      t+='\n';
+    });
+    if(!t) t='Cadastre os autores na estação de autoria.';
+    el('saidaIdent').innerHTML='<div class="saida" style="margin-top:10px">'+esc(t)+'</div>';
+  },
+  carta:function(){
+    var corr=E.autores.filter(function(a){return a.correspondente})[0]||{};
+    var rev=E.revistaEscolhida||'[nome da revista]';
+    var t='Prezado editor,\n\n';
+    t+='Submeto para apreciação o manuscrito intitulado "'+(E.trabalho.titulo||'[título]')+'", na condição de '+(E.tipo||'[tipo de artigo]')+'.\n\n';
+    t+='O trabalho '+(E.notas['pitch']||'[uma frase com o achado principal e a magnitude]')+'.\n\n';
+    t+='Considero o manuscrito adequado ao escopo de '+rev+' porque [relacione com uma linha editorial específica da revista e, se possível, com um ou dois artigos nela publicados recentemente].\n\n';
+    t+='Declaro que o manuscrito é original, que não foi publicado anteriormente e que não está sob avaliação em outro periódico. Todos os autores leram e aprovaram a versão submetida e concordam com a ordem de autoria.\n\n';
+    if(E.meta.etica) t+='A pesquisa foi aprovada sob '+E.meta.etica+'.\n';
+    if(E.meta.licenca) t+='A coleta foi autorizada sob '+E.meta.licenca+'.\n';
+    if(E.meta.financiamento) t+='O trabalho recebeu apoio de '+E.meta.financiamento+(E.meta.processo?' ('+E.meta.processo+')':'')+'.\n';
+    if(E.dados.doi) t+='Os dados que sustentam os resultados estão depositados em '+(E.dados.repositorio||'repositório público')+', sob o identificador '+E.dados.doi+'.\n';
+    if(E.meta.conflito) t+='\nConflito de interesses: '+E.meta.conflito+'\n';
+    t+='\nColoco-me à disposição para os esclarecimentos necessários.\n\nAtenciosamente,\n';
+    t+=(corr.nome||'[autor correspondente]')+'\n'+(corr.inst||E.meta.instituicao||'')+'\n'+(corr.email||'')+'\n'+(corr.orcid?('ORCID '+corr.orcid):'');
+    el('saidaCarta').innerHTML='<div class="saida">'+esc(t)+'</div>';
+  },
+  cartaRevisores:function(){
+    var t='Prezado editor,\n\nAgradecemos a leitura atenta do manuscrito e as observações recebidas. Abaixo respondemos a cada comentário. As alterações no texto estão destacadas na versão revisada.\n\n';
+    E.revisores.forEach(function(r,i){
+      t+='Comentário '+(i+1)+(r.rev?' ('+r.rev+')':'')+'\n';
+      t+='> '+(r.texto||'[comentário]')+'\n\n';
+      t+='Resposta: '+(r.resposta||'[resposta]')+'\n';
+      if(r.onde) t+='Alteração em: '+r.onde+'\n';
+      t+='\n';
+    });
+    t+='Permanecemos à disposição.\n';
+    el('saidaRev').innerHTML='<div class="saida" style="margin-top:10px">'+esc(t)+'</div>';
+  },
+  planoDifusao:function(){
+    var t='PLANO DE DIFUSÃO\n'+(E.trabalho.titulo||'[título]')+'\n\n';
+    t+='Revista: '+(E.revistaEscolhida||'não decidida')+'\n';
+    t+='Acesso aberto: '+(E.rotaOA||'não decidido')+'\n';
+    t+='Preprint: '+(E.preprint||'não decidido')+'\n';
+    t+='Palavras-chave: '+(E.chaves.join('; ')||'não definidas')+'\n\n';
+    t+='AÇÕES\n';
+    DIFUSAO.forEach(function(d){
+      var o=E.difusao[d.id]||{};
+      t+=(E.itens[d.id]?'[x] ':'[ ] ')+d.t+'\n';
+      t+='    responsável: '+(o.quem||'sem responsável')+'   prazo: '+(o.quando||'sem prazo')+'\n';
+    });
+    t+='\nObservação: a maior parte do alcance de um artigo é determinada pela escolha da revista, pelo título e pelas palavras-chave. As ações acima ampliam, não corrigem.\n';
+    el('saidaDifusao').innerHTML='<div class="saida" style="margin-top:12px">'+esc(t)+'</div>';
+  },
+  copiar:function(id){
+    var e=el(id); if(!e) return;
+    var t=(e.value!==undefined && e.value!==null && e.value!=='')? e.value : e.textContent;
+    if(!t||!t.trim()) return;
+    P.copiarTexto(t);
+  },
+  copiarTexto:function(t){
+    try{ navigator.clipboard.writeText(t); }catch(e){
+      var ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select();
+      try{ document.execCommand('copy'); }catch(e2){} ta.remove();
+    }
+  },
+  dossie:function(){
+    var t='DOSSIÊ DE SUBMISSÃO, gerado pelo ESTALEIRO\n';
+    t+='Data: '+new Date().toLocaleDateString('pt-BR')+'\n';
+    t+='Montagem concluída: '+Math.round(progGeral()*100)+' por cento\n\n';
+    t+='TÍTULO\n'+(E.trabalho.titulo||'[não preenchido]')+'\n\n';
+    t+='REVISTA ALVO\n'+(E.revistaEscolhida||'[não decidida]')+'   Acesso aberto: '+(E.rotaOA||'não decidido')+'\n\n';
+    t+='RESUMO ('+palavras(E.trabalho.resumo).length+' palavras)\n'+(E.trabalho.resumo||'[não preenchido]')+'\n\n';
+    t+='PALAVRAS-CHAVE\n'+(E.chaves.join('; ')||'[não definidas]')+'\n\n';
+    t+='AUTORES\n';
+    E.autores.forEach(function(a,i){
+      t+=(i+1)+'. '+(a.nome||'[nome]')+(a.correspondente?' (correspondente)':'')+'\n';
+      t+='   '+(a.inst||'')+'\n   '+(a.email||'')+'\n   ORCID '+(a.orcid||'')+(a.lattes?('   Lattes '+a.lattes):'')+'\n';
+      t+='   ICMJE: '+((a.icmje||[]).filter(Boolean).length)+' de 4\n';
+      t+='   CRediT: '+((a.credit||[]).join('; ')||'não declarado')+'\n';
+      if(a.justificativa) t+='   Justificativa: '+a.justificativa+'\n';
+    });
+    t+='\nMETADADOS\n';
+    t+='Afiliação padrão: '+(E.meta.instituicao||'')+'\n';
+    t+='Financiamento: '+(E.meta.financiamento||'')+' '+(E.meta.processo||'')+'\n';
+    t+='Ética: '+(E.meta.etica||'')+'\n';
+    t+='Licença de coleta: '+(E.meta.licenca||'')+'\n';
+    t+='Conflito de interesses: '+(E.meta.conflito||'')+'\n';
+    t+='Disponibilidade de dados: '+(E.meta.dispDados||'')+'\n';
+    t+='Uso de inteligência artificial: '+(E.meta.usoIA||'')+'\n';
+    t+='Dados: '+(E.dados.repositorio||'')+' '+(E.dados.doi||'')+' '+(E.dados.licencaDados||'')+'\n';
+    t+='\nFIGURAS E TABELAS\n';
+    E.figuras.forEach(function(f){ t+=(f.tipo||'')+' '+(f.num||'')+': '+(f.titulo||'')+'   citada em '+(f.ordem||'?')+'   '+(f.res||'')+'\n'; });
+    t+='\nPENDÊNCIAS CRÍTICAS\n';
+    var pend=[];
+    ESTACOES.forEach(function(es,ix){
+      itensDe(ix).forEach(function(it){ if(it.w==='critico' && !E.itens[it.id]) pend.push('['+es.curto+'] '+it.t); });
+    });
+    t+= pend.length? pend.join('\n') : 'Nenhuma pendência crítica.';
+    t+='\n\nANOTAÇÕES\n';
+    ESTACOES.forEach(function(es,ix){ if(E.notas['n'+ix]) t+='['+es.curto+'] '+E.notas['n'+ix]+'\n'; });
+    if(E.notas['acordo']) t+='[Acordo de autoria] '+E.notas['acordo']+'\n';
+    var ok=baixar('dossie-submissao.txt',t);
+    abrirTela('Dossiê de submissão', ok? 'Gerado a partir de tudo que foi preenchido. O download foi disparado. Se o navegador bloquear, copie o texto abaixo.' : 'Gerado a partir de tudo que foi preenchido. Este ambiente bloqueia downloads, então copie ou imprima o texto abaixo.',
+      '<textarea id="txtDossie" style="min-height:320px" class="mono" readonly>'+esc(t)+'</textarea>'+
+      '<div style="margin-top:10px"><button class="mini primario" onclick="P.copiar(\'txtDossie\')">Copiar tudo</button> <button class="mini" onclick="window.print()">Imprimir</button></div>');
+  },
+  fecharTela:fecharTela,
+  gerarChaves:async function(){
+    var alvo=el('saidaIA');
+    if(!(E.trabalho.resumo||'').trim()){ alvo.innerHTML='<div class="aviso alerta">Escreva o resumo no porto 4 antes de gerar termos.</div>'; return; }
+    alvo.innerHTML='<div class="aviso neutro">Gerando termos complementares.</div>';
+    var area=AREAS[E.area]? AREAS[E.area].nome : 'não informada';
+    var vocab=AREAS[E.area]? AREAS[E.area].vocabulario : 'vocabulário controlado da área';
+    var p='Você apoia autores na indexação de artigos científicos.\n\n'+
+      'Área: '+area+'\nVocabulário controlado de referência: '+vocab+'\n'+
+      'Título: '+(E.trabalho.titulo||'sem título')+'\n\nResumo: '+E.trabalho.resumo+'\n\n'+
+      'Proponha 8 palavras-chave candidatas. Regras obrigatórias: nenhuma pode repetir palavra já presente no título; '+
+      'inclua pelo menos 2 descritores do vocabulário controlado indicado, pelo menos 1 termo mais amplo que conecte o trabalho a uma agenda de pesquisa maior, '+
+      'e pelo menos 1 sinônimo ou variante terminológica usada por outra comunidade científica que estuda o mesmo objeto. '+
+      'Responda apenas com um vetor JSON, sem texto antes ou depois, no formato '+
+      '[{"termo":"...","motivo":"descritor controlado|termo amplo|sinônimo|termo vizinho"}]';
+    try{
+      var t=await chamarIA(p);
+      var limpo=t.replace(/```json|```/g,'').trim();
+      var ini=limpo.indexOf('['), fim=limpo.lastIndexOf(']');
+      if(ini>=0&&fim>ini) limpo=limpo.slice(ini,fim+1);
+      var arr=JSON.parse(limpo);
+      E.sugeridas=arr.filter(function(o){return o&&o.termo}).slice(0,10);
+      salvar(); render();
+    }catch(e){
+      alvo.innerHTML='<div class="aviso erro">Não foi possível gerar. '+esc(e.message)+
+        ' Dentro do Claude o serviço funciona sem configuração. Publicado em endereço próprio, informe abaixo o endereço de um proxy que encaminhe a chamada, porque a chave de acesso não pode ficar em página pública.</div>';
+    }
+  },
+  aprimorarCarta:async function(){
+    var alvo=el('saidaCartaIA');
+    var base=el('saidaCarta')? el('saidaCarta').textContent : '';
+    if(!base.trim()){ P.carta(); base=el('saidaCarta').textContent; }
+    alvo.innerHTML='<div class="aviso neutro">Reescrevendo o parágrafo de aderência ao escopo.</div>';
+    var p='Você revisa cartas de apresentação de manuscritos a periódicos científicos.\n\n'+
+      'Revista alvo: '+(E.revistaEscolhida||'não informada')+'\nTítulo: '+(E.trabalho.titulo||'')+'\n'+
+      'Resumo: '+(E.trabalho.resumo||'')+'\n\nCarta atual:\n'+base+'\n\n'+
+      'Reescreva a carta inteira em português, mantendo todos os dados factuais existentes e sem inventar número, aprovação ou financiamento que não esteja no texto. '+
+      'Substitua os trechos entre colchetes por redação concreta baseada no resumo. O parágrafo de aderência ao escopo deve dizer, em uma frase específica, por que o achado interessa ao leitor dessa revista. '+
+      'Tom sóbrio, sem adjetivos de autoelogio, sem travessões longos. Responda apenas com o texto da carta.';
+    try{
+      var t=await chamarIA(p);
+      alvo.innerHTML='<div class="saida" style="margin-top:10px">'+esc(t)+'</div>'+
+        '<div style="margin-top:8px"><button class="mini" onclick="P.copiar(\'saidaCartaIA\')">Copiar</button></div>';
+    }catch(e){
+      alvo.innerHTML='<div class="aviso erro">Não foi possível revisar. '+esc(e.message)+' A carta gerada acima continua válida e pode ser editada à mão.</div>';
+    }
+  },
+  sobre:function(){ P.ir(-1); },
+  biblioteca:function(){ P.ir(-2); },
+  secao:function(id){ SEC_ATUAL=id; desenhaEstacao(); },
+  exportarJSON:function(){
+    var t=JSON.stringify(E,null,2);
+    var ok=baixar('estaleiro.json',t,'application/json');
+    abrirTela('Salvar o trabalho', ok? 'O download foi disparado. Se o navegador bloquear downloads, e alguns visualizadores bloqueiam, copie o texto abaixo e guarde em um arquivo com extensão .json.' : 'Este ambiente bloqueia downloads. Copie o texto abaixo e guarde em um arquivo com extensão .json.',
+      '<textarea id="txtSalvar" style="min-height:260px" class="mono" readonly>'+esc(t)+'</textarea>'+
+      '<div style="margin-top:10px"><button class="mini primario" onclick="P.copiar(\'txtSalvar\')">Copiar tudo</button></div>');
+  },
+  abrir:function(){
+    abrirTela('Abrir um trabalho salvo','Escolha o arquivo .json ou cole o conteúdo dele no campo abaixo. Isto substitui o que está aberto agora.',
+      '<input type="file" accept="application/json,.json" onchange="P.importarJSON(event)" style="margin-bottom:12px">'+
+      '<textarea id="txtAbrir" style="min-height:200px" class="mono" placeholder="Cole aqui o conteúdo do arquivo"></textarea>'+
+      '<div style="margin-top:10px"><button class="mini primario" onclick="P.importarTexto()">Carregar do texto colado</button></div>'+
+      '<div id="avisoAbrir"></div>');
+  },
+  importarTexto:function(){
+    var t=el('txtAbrir')? el('txtAbrir').value : '';
+    if(!P.aplicarJSON(t)) el('avisoAbrir').innerHTML='<div class="aviso erro" style="margin-top:10px">Texto não reconhecido. Cole o conteúdo completo de um arquivo salvo pelo ESTALEIRO.</div>';
+  },
+  aplicarJSON:function(txt){
+    try{
+      var o=JSON.parse(txt);
+      if(typeof o!=='object'||!o) return false;
+      E=JSON.parse(JSON.stringify(VAZIO));
+      for(var k in VAZIO){ if(o[k]!==undefined) E[k]=o[k]; }
+      salvar(); atual=0; fecharTela(); render(); return true;
+    }catch(e){ return false; }
+  },
+  importarJSON:function(ev){
+    var f=ev.target.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){
+      if(!P.aplicarJSON(r.result)){
+        var a=el('avisoAbrir');
+        if(a) a.innerHTML='<div class="aviso erro" style="margin-top:10px">Arquivo não reconhecido. Use um arquivo salvo pelo próprio ESTALEIRO.</div>';
+      }
+    };
+    r.readAsText(f); ev.target.value='';
+  },
+  limpar:function(){
+    if(!confirm('Isso apaga todo o conteúdo deste navegador. Salve o arquivo antes se quiser guardar. Confirma?')) return;
+    E=JSON.parse(JSON.stringify(VAZIO)); loja.apagar('estaleiro.v1'); atual=0; render();
+  }
+};
+
+/* ---------- partida ---------- */
+carregar();
+atual = (E.trabalho.titulo || E.autores.length || Object.keys(E.itens).length) ? 0 : -1;
+render();
+if(!TEM_LS){
+  el('avisoArmazenamento').textContent='Este visualizador bloqueou o armazenamento do navegador. O trabalho está guardado apenas na memória desta aba e se perde ao fechar. Use "Salvar arquivo". Publicado em endereço próprio, o salvamento automático funciona normalmente.';
+}
+</script>
+</body>
+</html>
