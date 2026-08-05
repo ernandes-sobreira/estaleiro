@@ -220,8 +220,7 @@ th{background:var(--suave);color:var(--mar);font-weight:600;font-size:12px;lette
       </div>
     </div>
     <div class="acoes">
-      <button onclick="P.sobre()">Sobre</button>
-      <button onclick="P.biblioteca()">Biblioteca</button>
+      <button class="primario" onclick="P.ir(-3)">Construa seu artigo</button>
       <button onclick="P.exportarJSON()">Salvar</button>
       <button onclick="P.abrir()">Abrir</button>
       <button onclick="P.dossie()">Dossiê</button>
@@ -272,7 +271,7 @@ var VAZIO={
   figuras:[],
   dados:{repositorio:'', doi:'', licencaDados:'', codigo:''},
   revisores:[],
-  itens:{}, notas:{}, difusao:{}, iaUrl:'', sugeridas:[], sobreFechado:false
+  itens:{}, notas:{}, difusao:{}, iaUrl:'', sugeridas:[], texto:{}, sobreFechado:false
 };
 var E=JSON.parse(JSON.stringify(VAZIO));
 var atual=0;
@@ -644,9 +643,10 @@ function desenhaSobre(){
   s+='<div class="eyebrow">Instrumento aberto de escrita científica</div>';
   s+='<h2>Um artigo é construído, não é escrito de uma vez</h2>';
   s+='<p class="lide">O ESTALEIRO acompanha a travessia de um manuscrito por quatorze portos, da primeira decisão até a publicação. Em cada porto há verificações, ferramentas de escrita e diagnósticos que apontam o que ainda não está resolvido. O navio só avança quando o porto é liberado.</p>';
+  s+='<p>A aba <b>Construa seu artigo</b> é a oficina de escrita: você escreve uma parte de cada vez, com orientação curta em cada uma, e sai com o documento montado em Word. Título, resumo, palavras-chave, autores e declarações vêm dos portos e não precisam ser digitados de novo.</p>';
   s+='<p>Nada é enviado para servidor algum. O trabalho fica neste navegador e pode ser salvo em arquivo para continuar em outro computador, entregar ao orientador ou passar para um coautor. É de uso livre, sem cadastro e sem custo, por qualquer programa de pós-graduação, em qualquer grande área.</p>';
   s+='<div class="colunas">';
-  s+='<div class="col"><h4>O que ela faz</h4><p>Testa o título contra critérios de recuperação em bases, analisa os seis movimentos do resumo, gera e depura palavras-chave, aplica o portão ICMJE de autoria com papéis CRediT, valida ORCID por dígito verificador, confere ordem de citação de figuras e monta carta ao editor, dossiê de submissão e plano de difusão.</p></div>';
+  s+='<div class="col"><h4>O que ela faz</h4><p>Reúne a oficina de escrita com exportação em Word, testa o título contra critérios de recuperação em bases, analisa os seis movimentos do resumo, gera e depura palavras-chave, aplica o portão ICMJE de autoria com papéis CRediT, valida ORCID por dígito verificador, confere ordem de citação de figuras e monta carta ao editor, dossiê de submissão e plano de difusão.</p></div>';
   s+='<div class="col"><h4>Para quem</h4><p>Mestrandos e doutorandos escrevendo o primeiro artigo, orientadores que precisam de um critério comum para devolver manuscritos, grupos de pesquisa com muitos coautores, disciplinas de metodologia e redação científica, e comissões de programa que avaliam produção antes da submissão.</p></div>';
   s+='<div class="col"><h4>O que ela não faz</h4><p>Não escreve o artigo por você. Não calcula percentual de contribuição de autoria, porque isso não existe em periódico algum e só produz conflito. Não substitui a leitura do guia de autores da revista escolhida. Ela organiza decisões, expõe pendências e impede que erros caros sejam descobertos tarde.</p></div>';
   s+='</div>';
@@ -688,6 +688,7 @@ function mapaPortos(){
 /* ---------- navegação ---------- */
 function desenhaRumos(){
   var s='<button class="aba-sobre '+(atual===-1?'ativo':'')+'" onclick="P.ir(-1)">Sobre</button>'+
+        '<button class="aba-sobre '+(atual===-3?'ativo':'')+'" onclick="P.ir(-3)">Construa seu artigo</button>'+
         '<button class="aba-sobre '+(atual===-2?'ativo':'')+'" onclick="P.ir(-2)">Biblioteca</button>';
   for(var i=0;i<ESTACOES.length;i++){
     var p=progEstacao(i).pct;
@@ -1511,8 +1512,137 @@ function desenhaBiblioteca(){
   el('estacao').innerHTML=s;
 }
 
+
+/* ================= escrever o artigo ================= */
+var TEXTOS=[
+ {id:'intro',nome:'Introdução',sec:'intro',dica:'Do campo amplo até a lacuna, terminando no objetivo.'},
+ {id:'metodo',nome:'Método',sec:'metodo',dica:'Detalhe suficiente para outra pessoa repetir o estudo.'},
+ {id:'result',nome:'Resultados',sec:'result',dica:'O achado com magnitude e variação, sem interpretar.'},
+ {id:'discus',nome:'Discussão',sec:'discus',dica:'Responda ao objetivo e confronte a literatura.'},
+ {id:'limit',nome:'Limitações',sec:'limit',dica:'Cada limitação diz qual inferência ela restringe.'},
+ {id:'concl',nome:'Conclusão',sec:'concl',dica:'A resposta e até onde ela vale.'},
+ {id:'agrad',nome:'Agradecimentos',sec:null,dica:'Quem ajudou sem cumprir os critérios de autoria, com anuência.'},
+ {id:'refs',nome:'Referências',sec:null,dica:'Uma por linha, no estilo exigido pela revista escolhida.'}
+];
+var TEXTO_ATUAL='intro';
+
+function contaPalavras(t){ return palavras(t).length; }
+function prontosTexto(){ return TEXTOS.filter(function(x){ return contaPalavras(E.texto[x.id]||'')>20; }).length; }
+
+function desenhaEscrever(){
+  var i=0; TEXTOS.forEach(function(x,ix){ if(x.id===TEXTO_ATUAL) i=ix; });
+  var at=TEXTOS[i];
+  var s='<div class="sobre" style="padding-bottom:0"><div class="eyebrow">Oficina</div><h2>Construa seu artigo aqui</h2>';
+  s+='<p class="lide">Escreva uma parte de cada vez. O título, o resumo, as palavras-chave e os autores vêm dos portos e não precisam ser digitados de novo. Ao final, saia com o documento montado em Word.</p></div>';
+  s+='<div class="abas-sec" id="abasTexto">'+htmlAbasTexto()+'</div>';
+  s+='<div class="painel" style="border-left-color:'+COR.rosa+'">';
+  s+='<h3>'+esc(at.nome)+'</h3><div class="sub">'+esc(at.dica)+'</div>';
+  s+='<textarea id="edTexto" style="min-height:420px;font-size:15px;line-height:1.7" oninput="P.escrever(this.value)" placeholder="Escreva aqui. O texto é salvo neste navegador a cada tecla.">'+esc(E.texto[at.id]||'')+'</textarea>';
+  s+='<div class="contador" id="contTexto">'+contaPalavras(E.texto[at.id]||'')+' palavras</div>';
+  s+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">';
+  if(i>0) s+='<button class="mini" onclick="P.texto(\''+TEXTOS[i-1].id+'\')">Anterior</button>';
+  if(i<TEXTOS.length-1) s+='<button class="mini primario" onclick="P.texto(\''+TEXTOS[i+1].id+'\')">Próxima parte</button>';
+  if(at.sec) s+='<button class="mini" onclick="P.verEstrutura(\''+at.sec+'\')">Ver a estrutura desta seção</button>';
+  s+='</div></div>';
+  s+='<div class="painel"><h3>Montagem</h3><div class="sub">'+prontosTexto()+' de '+TEXTOS.length+' partes com texto. O que vem dos portos entra automaticamente.</div>';
+  s+='<div class="mapa" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">'+
+     cartaoVem('Título',E.trabalho.titulo,'porto 4')+
+     cartaoVem('Resumo',E.trabalho.resumo,'porto 5')+
+     cartaoVem('Palavras-chave',E.chaves.join('; '),'porto 6')+
+     cartaoVem('Autores e afiliações',E.autores.map(function(a){return a.nome}).filter(Boolean).join('; '),'porto 7')+
+     cartaoVem('Contribuição CRediT',E.autores.filter(function(a){return (a.credit||[]).length}).length? 'declarada':'','porto 7')+
+     cartaoVem('Financiamento e ética',[E.meta.financiamento,E.meta.etica].filter(Boolean).join(' | '),'porto 8')+
+     '</div>';
+  s+='<div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">'+
+     '<button class="primario" onclick="P.baixarWord()">Baixar em Word</button>'+
+     '<button onclick="P.verArtigo()">Ver o artigo montado</button>'+
+     '<button onclick="P.exportarJSON()">Salvar arquivo JSON</button>'+
+     '</div>';
+  s+='<div class="nota">O documento sai com fonte Times New Roman 12, entrelinha 1,5, seções numeradas e as declarações obrigatórias já posicionadas. A formatação fina, como estilo de referência e numeração de linhas, se ajusta no Word conforme o guia da revista.</div>';
+  s+='</div>';
+  el('estacao').innerHTML=s;
+}
+function cartaoVem(nome,valor,onde){
+  var tem=!!(valor&&String(valor).trim());
+  return '<a style="border-left-color:'+(tem?COR.laranja:COR.linha)+'" onclick="P.ir('+({'porto 4':3,'porto 5':4,'porto 6':5,'porto 7':6,'porto 8':7}[onde])+')">'+
+    '<i>'+esc(onde)+'</i><b>'+esc(nome)+'</b><small>'+(tem? esc(String(valor).slice(0,70)+(String(valor).length>70?'...':'')) : 'ainda vazio, clique para preencher')+'</small></a>';
+}
+function htmlAbasTexto(){
+  return TEXTOS.map(function(x){
+    var n=contaPalavras(E.texto[x.id]||'');
+    return '<button class="'+(TEXTO_ATUAL===x.id?'on':'')+'" onclick="P.texto(\''+x.id+'\')">'+esc(x.nome)+' <small>'+(n>20?'✓':n)+'</small></button>';
+  }).join('');
+}
+
+function paragrafos(t){
+  return String(t||'').split(/\n\s*\n|\n/).map(function(p){return p.trim()}).filter(Boolean);
+}
+function corpoArtigo(){
+  var b=[];
+  b.push(['titulo',E.trabalho.titulo||'[título do artigo]']);
+  var linhaAut=E.autores.map(function(a,i){ return (a.nome||'[autor]')+(a.inst?(' '+(i+1)):''); }).join(', ');
+  if(linhaAut) b.push(['autores',linhaAut]);
+  E.autores.forEach(function(a,i){
+    if(a.inst) b.push(['afil',(i+1)+' '+a.inst+(a.orcid?('. ORCID '+a.orcid):'')]);
+  });
+  var corr=E.autores.filter(function(a){return a.correspondente})[0];
+  if(corr) b.push(['corr','Autor correspondente: '+(corr.nome||'')+(corr.email?(', '+corr.email):'')]);
+  if(E.trabalho.resumo) { b.push(['h','Resumo']); b.push(['p',E.trabalho.resumo]); }
+  if(E.chaves.length) b.push(['p','Palavras-chave: '+E.chaves.join('; ')]);
+  var num=1;
+  [['intro','Introdução'],['metodo','Material e métodos'],['result','Resultados'],['discus','Discussão']].forEach(function(x){
+    if(E.texto[x[0]]){ b.push(['h',(num++)+'. '+x[1]]); paragrafos(E.texto[x[0]]).forEach(function(p){ b.push(['p',p]); }); }
+  });
+  if(E.texto.limit){ b.push(['h2','4.1 Limitações']); paragrafos(E.texto.limit).forEach(function(p){ b.push(['p',p]); }); }
+  if(E.texto.concl){ b.push(['h',num+'. Conclusão']); paragrafos(E.texto.concl).forEach(function(p){ b.push(['p',p]); }); }
+  if(E.texto.agrad){ b.push(['h','Agradecimentos']); paragrafos(E.texto.agrad).forEach(function(p){ b.push(['p',p]); }); }
+  if(E.meta.financiamento){ b.push(['h','Financiamento']); b.push(['p',E.meta.financiamento+(E.meta.processo?(' ('+E.meta.processo+')'):'')]); }
+  var credito=E.autores.filter(function(a){return a.nome&&(a.credit||[]).length}).map(function(a){ return a.nome+': '+a.credit.join('; ')+'.'; });
+  if(credito.length){ b.push(['h','Contribuição dos autores']); b.push(['p','Segundo a taxonomia CRediT. '+credito.join(' ')]); }
+  if(E.meta.etica||E.meta.licenca){ b.push(['h','Aprovações e licenças']); b.push(['p',[E.meta.etica,E.meta.licenca].filter(Boolean).join('. ')]); }
+  if(E.meta.dispDados||E.dados.doi){ b.push(['h','Disponibilidade de dados']); b.push(['p',(E.meta.dispDados||'')+(E.dados.doi?(' Identificador: '+E.dados.doi+'.'):'')]); }
+  if(E.meta.conflito){ b.push(['h','Conflito de interesses']); b.push(['p',E.meta.conflito]); }
+  if(E.meta.usoIA){ b.push(['h','Uso de inteligência artificial']); b.push(['p',E.meta.usoIA]); }
+  if(E.texto.refs){ b.push(['h','Referências']); paragrafos(E.texto.refs).forEach(function(p){ b.push(['ref',p]); }); }
+  return b;
+}
+function artigoTexto(){
+  return corpoArtigo().map(function(x){
+    if(x[0]==='titulo') return x[1].toUpperCase()+'\n';
+    if(x[0]==='h') return '\n'+x[1].toUpperCase()+'\n';
+    if(x[0]==='h2') return '\n'+x[1]+'\n';
+    return x[1];
+  }).join('\n');
+}
+function artigoHTML(){
+  var c='';
+  corpoArtigo().forEach(function(x){
+    if(x[0]==='titulo') c+='<p class=t>'+esc(x[1])+'</p>';
+    else if(x[0]==='autores') c+='<p class=a>'+esc(x[1])+'</p>';
+    else if(x[0]==='afil'||x[0]==='corr') c+='<p class=f>'+esc(x[1])+'</p>';
+    else if(x[0]==='h') c+='<p class=h>'+esc(x[1])+'</p>';
+    else if(x[0]==='h2') c+='<p class=h2>'+esc(x[1])+'</p>';
+    else if(x[0]==='ref') c+='<p class=r>'+esc(x[1])+'</p>';
+    else c+='<p class=p>'+esc(x[1])+'</p>';
+  });
+  return '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">'+
+   '<head><meta charset="utf-8"><title>'+esc(E.trabalho.titulo||'Artigo')+'</title>'+
+   '<style>@page{size:A4;margin:2.5cm}'+
+   'body{font-family:"Times New Roman",serif;font-size:12pt}'+
+   'p{margin:0 0 6pt 0;line-height:1.5}'+
+   '.t{font-size:14pt;font-weight:bold;text-align:center;margin-bottom:12pt}'+
+   '.a{text-align:center;margin-bottom:4pt}'+
+   '.f{text-align:center;font-size:10pt;margin:0}'+
+   '.h{font-weight:bold;text-transform:uppercase;margin:14pt 0 6pt 0}'+
+   '.h2{font-weight:bold;margin:10pt 0 6pt 0}'+
+   '.p{text-align:justify;text-indent:1.25cm}'+
+   '.r{text-align:justify;margin-bottom:6pt}'+
+   '</style></head><body>'+c+'</body></html>';
+}
+
 /* ---------- desenho da estação ---------- */
 function desenhaEstacao(){
+  if(atual===-3){ desenhaEscrever(); return; }
   if(atual===-2){ desenhaBiblioteca(); return; }
   if(atual<0){ desenhaSobre(); return; }
   var i=atual, es=ESTACOES[i], p=progEstacao(i);
@@ -1808,6 +1938,33 @@ var P={
   sobre:function(){ P.ir(-1); },
   biblioteca:function(){ P.ir(-2); },
   secao:function(id){ SEC_ATUAL=id; desenhaEstacao(); },
+  texto:function(id){ TEXTO_ATUAL=id; desenhaEstacao(); window.scrollTo({top:0,behavior:'smooth'}); },
+  escrever:function(v){
+    E.texto[TEXTO_ATUAL]=v; salvar();
+    var c=el('contTexto'); if(c) c.textContent=contaPalavras(v)+' palavras';
+    var a=el('abasTexto'); if(a) a.innerHTML=htmlAbasTexto();
+  },
+  verEstrutura:function(sec){
+    SEC_ATUAL=sec;
+    var ix=0; ESTACOES.forEach(function(e,i){ if(e.mod==='corpo') ix=i; });
+    P.ir(ix);
+  },
+  verArtigo:function(){
+    var t=artigoTexto();
+    abrirTela('O artigo montado','Prévia em texto simples. O arquivo em Word sai com a formatação aplicada.',
+      '<textarea id="txtArtigo" style="min-height:380px" readonly>'+esc(t)+'</textarea>'+
+      '<div style="margin-top:10px"><button class="mini primario" onclick="P.baixarWord()">Baixar em Word</button> <button class="mini" onclick="P.copiar(\'txtArtigo\')">Copiar</button> <button class="mini" onclick="window.print()">Imprimir</button></div>');
+  },
+  baixarWord:function(){
+    var html=artigoHTML();
+    var nome=(E.trabalho.titulo||'artigo').toLowerCase().normalize('NFD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40)||'artigo';
+    var ok=baixar(nome+'.doc',html,'application/msword');
+    if(!ok){
+      abrirTela('Baixar em Word','Este ambiente bloqueia downloads. Copie o texto abaixo e cole no Word, ou use o botão de imprimir.',
+        '<textarea id="txtArtigo2" style="min-height:340px" readonly>'+esc(artigoTexto())+'</textarea>'+
+        '<div style="margin-top:10px"><button class="mini primario" onclick="P.copiar(\'txtArtigo2\')">Copiar</button> <button class="mini" onclick="window.print()">Imprimir</button></div>');
+    }
+  },
   exportarJSON:function(){
     var t=JSON.stringify(E,null,2);
     var ok=baixar('estaleiro.json',t,'application/json');
